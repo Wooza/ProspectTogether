@@ -36,7 +36,7 @@ Note that autosharing is enabled by default, but you might want to disable it on
         No argument resets the heatmap back to all ores. Can only handle the ore name in your selected language or the ore tag.
         Examples: game:ore-emerald, game:ore-bituminouscoal, Cassiterite.
     .pt autoshare [true,false] - Set automatic sharing of prospecting data.
-    .pt setsaveintervalminutes [1-60] - Periodically store the prospecting data (on the cleint) every x minutes.
+    .pt setsaveintervalminutes [1-60] - Periodically store the prospecting data (on the client) every x minutes.
     .pt sendall - Send all your existing prospecting information to the server. You usually only have to run this command once per server.
 
 ### Client Configuration
