@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using ProtoBuf;
 using System.Collections.Generic;
 using System.Text;
 using Vintagestory.API.Config;
 
 namespace ProspectTogether.Shared
 {
-    [ProtoBuf.ProtoContract(ImplicitFields = ProtoBuf.ImplicitFields.None)]
+    [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public class ProspectInfo
     {
         private static readonly Dictionary<RelativeDensity, string> RelativeDensityToLang = new Dictionary<RelativeDensity, string>{
@@ -19,14 +20,14 @@ namespace ProspectTogether.Shared
 
 
 
-        [ProtoBuf.ProtoMember(1)]
+        [ProtoMember(1)]
         public readonly ChunkCoordinate Chunk;
 
         /// <summary>
         /// A sorted list of all ore occurencies in this chunk. The ore with the highest relative density is first.
         /// </summary>
-        [ProtoBuf.ProtoMember(2)]
-        public readonly List<OreOccurence> Values;
+        [ProtoMember(2)]
+        public List<OreOccurence> Values = new List<OreOccurence>();
 
         /// <summary>
         /// The return value from <see cref="GetMessage"/> if it was called at least once. Used to avoid multiple StringBuilder calls.
@@ -34,14 +35,10 @@ namespace ProspectTogether.Shared
         [Newtonsoft.Json.JsonIgnore]
         private string _MessageCache;
 
-        /// <summary>
-        /// Required for ProtoBuf deserialization
-        /// </summary>
-        private ProspectInfo()
-        {
-        }
+        public ProspectInfo()
+        { }
 
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public ProspectInfo(ChunkCoordinate chunk, List<OreOccurence> values)
         {
             Chunk = chunk;
@@ -166,13 +163,15 @@ namespace ProspectTogether.Shared
         }
     }
 
-    public class StoredData {
+    public class StoredData
+    {
 
         public int Version = 1;
 
         public List<ProspectInfo> ProspectInfos = new List<ProspectInfo>();
 
-        public StoredData() { 
+        public StoredData()
+        {
         }
 
         [JsonConstructor]

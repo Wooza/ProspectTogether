@@ -17,7 +17,7 @@ These entries cannot be imported. So you might have to prospect some chunks agai
 
 If you want to share your existing prospecting data with other players on the server, use `.pt sendall`.
 This will send all your prospecting data to the server and all other players. You only have to do this once.
-The server stores this information in `%Vintage_Story_Data%/ModData/YourWorldId/prospectTogetherServer.json`
+The server stores this information in `%Vintage_Story_Data%/ModData/YourWorldId/prospectTogetherServer.json`.
 If you also want to share newly added prospecting data in the future, enable autosharing. 
 You can do this either via the dialog on the map (use `.pt showgui` to open it if it is missing) or by using `.pt autoshare true`.
 Note that autosharing is enabled by default, but you might want to disable it on a PvP server.

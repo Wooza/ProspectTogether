@@ -6,16 +6,14 @@ namespace ProspectTogether.Shared
     [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public class ProspectingPacket
     {
+
         [ProtoMember(1)]
-        public readonly List<ProspectInfo> Data;
+        public List<ProspectInfo> Data = new List<ProspectInfo>();
 
         [ProtoMember(2)]
-        public readonly bool OriginatesFromProPick;
+        public bool OriginatesFromProPick;
 
-        ProspectingPacket()
-        {
-            Data = new List<ProspectInfo>();
-        }
+        public ProspectingPacket() { }
 
         public ProspectingPacket(List<ProspectInfo> data, bool originatesFromProPick)
         {
