@@ -11,7 +11,7 @@ Just drop the file into your `Mods` folder.
 ## Migration from ProspectorInfo
 
 This mod will automatically import existing prospecting data from the ProspectorInfo mod.
-To be more specific, in the `%Vintage_Story_Data%/ModData/YourWorldId/` directory, it will copy the file `vsprospectorinfo.data` to `prospectTogetherClient.json`.
+To be more specific, in the `%Vintage_Story_Data%/ModData/YourWorldId/` directory, it will copy the file `vsprospectorinfo.data.json` to `prospectTogetherClient.json`.
 Note that there have been cases, where ProspectorInfo was unable to parse the output of the Prospecting Pick.
 These entries cannot be imported. So you might have to prospect some chunks again.
 
