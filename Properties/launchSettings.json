@@ -3,7 +3,7 @@
     "start-all-mods-in-sln": {
       "commandName": "Executable",
       "executablePath": "$(VINTAGE_STORY)/Vintagestory.exe",
-      "commandLineArgs": "--addModPath=\"$(SolutionDir)bin\Debug\net461\" --tracelog"
+      "commandLineArgs": "--addModPath=\"$(SolutionDir)bin\" --tracelog"
     }
   }
 }
