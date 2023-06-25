@@ -65,11 +65,11 @@ namespace ProspectTogether.Client
             SingleComposer = capi.Gui.CreateCompo("ProspectTogether Settings", dialogBounds)
                 .AddShadedDialogBG(backgroundBounds)
                 .AddDialogTitleBar("ProspectTogether", OnCloseTitleBar)
-                .AddStaticText("Show overlay", CairoFont.WhiteDetailText(), showOverlayTextBounds)
+                .AddStaticText(ModLang.Get("dialog-show-overlay"), CairoFont.WhiteDetailText(), showOverlayTextBounds)
                 .AddSwitch(OnSwitchOverlay, switchBounds, "showOverlaySwitch")
-                .AddDropDown(new string[] { "0", "1" }, new string[] { "Default", "Heatmap" }, (int)Config.MapMode, OnMapModeSelected, mapModeBounds)
+                .AddDropDown(new string[] { "0", "1" }, new string[] { ModLang.Get("dialog-map-mode-default"), ModLang.Get("dialog-map-mode-heatmap") }, (int)Config.MapMode, OnMapModeSelected, mapModeBounds)
                 .AddDropDown(Ores.Select((pair) => pair.Value).ToArray(), Ores.Select((pair) => pair.Key).ToArray(), currentHeatmapOreIndex, OnHeatmapOreSelected, oreBounds)
-                .AddStaticText("Auto share", CairoFont.WhiteDetailText(), autoShareTextBounds)
+                .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
                 .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, "autoShareSwitch")
                 .Compose();
 

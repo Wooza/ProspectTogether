@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using ProspectTogether.Shared;
+﻿using ProspectTogether.Shared;
 using System.Collections.Generic;
+using Vintagestory.API.Config;
 using Vintagestory.API.Util;
 
 namespace ProspectTogether.Client
@@ -15,6 +15,14 @@ namespace ProspectTogether.Client
             foreach (var elem in oreValues)
                 if (!TryGetValue(elem.Value, out string _)) // Ores with the same translation will be saved under the same tag
                     Add(elem.Value, elem.Key);
+        }
+    }
+
+    public class ModLang
+    {
+        public static string Get(string id)
+        {
+            return Lang.Get(Constants.MOD_ID + ":" + id);
         }
     }
 
