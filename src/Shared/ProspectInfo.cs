@@ -104,12 +104,11 @@ namespace ProspectTogether.Shared
 
         public RelativeDensity GetValueOfOre(string oreName)
         {
-            if (Values != null)
-                foreach (var ore in Values)
-                {
-                    if (Lang.Get(ore.Name).ToLower() == oreName.ToLower() || ore.Name.ToLower() == oreName.ToLower())
-                        return ore.RelativeDensity;
-                }
+            foreach (var ore in Values)
+            {
+                if (Lang.Get(ore.Name).ToLower() == oreName.ToLower() || ore.Name.ToLower() == oreName.ToLower())
+                    return ore.RelativeDensity;
+            }
             return RelativeDensity.Zero;
         }
     }
