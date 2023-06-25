@@ -4,7 +4,7 @@
   "name": "ProspectTogether",
   "author": "Wooza",
   "side" : "Universal",
-  "description": "Stores and displays prospecting data on the map and allows sharing data between players. Based ProspectoInfo by P3t3rix.",
+  "description": "Stores and displays prospecting data on the map and allows sharing data between players. Based on ProspectoInfo by P3t3rix.",
   "version": "1.0.0-rc.3",
   "dependencies": {
     "game": "1.18.5"
