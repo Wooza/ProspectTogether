@@ -1,11 +1,6 @@
 {
-    "comment_description": "Ukrainian localization file for 'ProspectTogether'.",
-    "comment_version": "Mod Version: v1.0.0-rc.3",
-    "comment_author": "Translated By: CakesTwix",
-    "comment_technical_details": "Machine translation using AWS and DeepL.",
-
     "dialog-show-overlay": "Показати оверлей",
     "dialog-map-mode-default": "За замовчуванням",
     "dialog-map-mode-heatmap": "Теплова карта",
-    "dialog-auto-share": "Автоматичний обмін"
+    "dialog-auto-share": "Авто. обмін"
 }
