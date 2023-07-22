@@ -2,5 +2,7 @@
 	"dialog-show-overlay": "Show overlay",
 	"dialog-map-mode-default": "Default",
 	"dialog-map-mode-heatmap": "Heatmap",
-	"dialog-auto-share": "Auto share"
+	"dialog-auto-share": "Auto share",
+	"dialog-send-all-now": "Send all now",
+	"dialog-all-players": "All players"
 }

@@ -24,7 +24,7 @@ namespace ProspectTogether.Client
             Ores = new List<KeyValuePair<string, string>>();
             Ores.Insert(0, new KeyValuePair<string, string>("All ores", null));
             Groups = new List<KeyValuePair<string, string>>();
-            Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), "All players"));
+            Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), ModLang.Get("dialog-all-players")));
             SetupDialog();
         }
 
@@ -43,7 +43,7 @@ namespace ProspectTogether.Client
                 if (Groups.Count != capi.World.Player.Groups.Count() + 1)
                 {
                     Groups = new List<KeyValuePair<string, string>>();
-                    Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), "All players"));
+                    Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), ModLang.Get("dialog-all-players")));
                     foreach (PlayerGroupMembership group in capi.World.Player.Groups)
                     {
                         Groups.Add(new KeyValuePair<string, string>(group.GroupUid.ToString(), group.GroupName));
@@ -104,7 +104,7 @@ namespace ProspectTogether.Client
                 .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
                 .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, "autoShareSwitch")
                 .AddDropDown(Groups.Select(p => p.Key).ToArray(), Groups.Select(p => p.Value).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds)
-                .AddButton("Send all now", OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small)
+                .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small)
                 .Compose();
 
             SingleComposer.GetSwitch("showOverlaySwitch").On = Config.RenderTexturesOnMap;
