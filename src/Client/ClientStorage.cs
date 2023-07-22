@@ -1,4 +1,6 @@
-﻿using ProspectTogether.Shared;
+﻿using Foundation.Extensions;
+using Newtonsoft.Json;
+using ProspectTogether.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,8 @@ namespace ProspectTogether.Client
 
         public event Action<ICollection<ProspectInfo>> OnChanged;
 
+        public IDictionary<ChunkCoordinate, ProspectInfo> Data = new Dictionary<ChunkCoordinate, ProspectInfo>();
+
         public ClientStorage(ICoreClientAPI api, ClientModConfig config, string fileName) : base(api, config, fileName)
         {
         }
@@ -25,13 +29,56 @@ namespace ProspectTogether.Client
             LoadProspectingDataFile();
             Api.Event.LeaveWorld += SaveProspectingDataFile;
             ClientChannel = Api.Network.RegisterChannel(ChannelName)
-                .RegisterMessageType<ProspectingPacket>()
-                .SetMessageHandler<ProspectingPacket>(OnClientDataReceived);
+                .RegisterMessageType<PlayerProspectedPacket>()
+                .RegisterMessageType<PlayerSharesProspectingPacket>()
+                .RegisterMessageType<ServerBroadcastsProspectingPacket>()
+                .RegisterMessageType<PlayerRequestsInfoForGroupPacket>()
+                .SetMessageHandler<ServerBroadcastsProspectingPacket>(OnServerBroadcastsProspecting)
+                .SetMessageHandler<PlayerProspectedPacket>(OnPlayerProspected);
             ConfigureSaveListener();
+
+            Api.Event.PlayerJoin += p =>
+            {
+                RequestInfo();
+            };
+
         }
 
-        protected virtual void OnClientDataReceived(ProspectingPacket packet)
+        public void RequestInfo()
         {
+            if (Config.AutoShare)
+            {
+                ClientChannel.SendPacket(new PlayerRequestsInfoForGroupPacket(Constants.ALL_GROUP_ID));
+                ClientChannel.SendPacket(new PlayerRequestsInfoForGroupPacket(Config.ShareGroupUid));
+            }
+        }
+
+        private void OnPlayerProspected(PlayerProspectedPacket packet)
+        {
+            lock (Lock)
+            {
+                Data[packet.Data.Chunk] = packet.Data;
+                foreach (OreOccurence ore in packet.Data.Values)
+                {
+                    FoundOreNames.Add(ore.Name);
+                }
+                HasChangedSinceLastSave = true;
+                OnChanged?.Invoke(new List<ProspectInfo>() { packet.Data });
+            }
+            if (Config.AutoShare)
+            {
+                // It's our prospecting data and we want to share it.
+                ClientChannel.SendPacket(new PlayerSharesProspectingPacket(new List<ProspectInfo>() { packet.Data }, Config.ShareGroupUid));
+            }
+        }
+
+        protected void OnServerBroadcastsProspecting(ServerBroadcastsProspectingPacket packet)
+        {
+            if (!Config.AutoShare)
+            {
+                return;
+            }
+
             lock (Lock)
             {
                 foreach (ProspectInfo info in packet.Data)
@@ -45,19 +92,61 @@ namespace ProspectTogether.Client
                 HasChangedSinceLastSave = true;
                 OnChanged?.Invoke(packet.Data);
             }
-            if (packet.OriginatesFromProPick && Config.AutoShare)
-            {
-                // It's our prospecting data and we want to share it.
-                ClientChannel.SendPacket(new ProspectingPacket(packet.Data, false));
-            }
         }
 
         public void SendAll()
         {
             lock (Lock)
             {
-                ClientChannel.SendPacket(new ProspectingPacket(Data.Values.ToList(), false));
+                ClientChannel.SendPacket(new PlayerSharesProspectingPacket(Data.Values.ToList(), Config.ShareGroupUid));
             }
         }
+
+        protected override void SaveProspectingDataFile()
+        {
+            lock (Lock)
+            {
+                if (HasChangedSinceLastSave)
+                {
+                    Api.SaveDataFile(FileName, new ClientStoredData(Data.Values.ToList()));
+                    HasChangedSinceLastSave = false;
+                }
+            }
+        }
+
+        protected override void LoadProspectingDataFile()
+        {
+            lock (Lock)
+            {
+                ClientStoredData loaded = Api.LoadOrCreateDataFile<ClientStoredData>(FileName);
+                Data = loaded.ProspectInfos.ToDictionary(item => item.Chunk, item => item);
+                HasChangedSinceLastSave = false;
+            }
+        }
+    }
+
+    public class ClientStoredData
+    {
+
+        public int Version = 1;
+
+        public List<ProspectInfo> ProspectInfos = new List<ProspectInfo>();
+
+        public ClientStoredData()
+        {
+        }
+
+        [JsonConstructor]
+        public ClientStoredData(int version, List<ProspectInfo> prospectInfos)
+        {
+            this.Version = version;
+            this.ProspectInfos = prospectInfos;
+        }
+
+        public ClientStoredData(List<ProspectInfo> prospectInfos)
+        {
+            this.ProspectInfos = prospectInfos;
+        }
+
     }
 }

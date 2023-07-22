@@ -161,29 +161,4 @@ namespace ProspectTogether.Shared
             Z = z;
         }
     }
-
-    public class StoredData
-    {
-
-        public int Version = 1;
-
-        public List<ProspectInfo> ProspectInfos = new List<ProspectInfo>();
-
-        public StoredData()
-        {
-        }
-
-        [JsonConstructor]
-        public StoredData(int version, List<ProspectInfo> prospectInfos)
-        {
-            this.Version = version;
-            this.ProspectInfos = prospectInfos;
-        }
-
-        public StoredData(List<ProspectInfo> prospectInfos)
-        {
-            this.ProspectInfos = prospectInfos;
-        }
-
-    }
 }

@@ -1,7 +1,7 @@
 # ProspectTogether
 
 This is a fork of the awesome ProspectorInfo mod from P3t3rix (https://github.com/p3t3rix-vsmods/VsProspectorInfo).
-ProspectTogether aims to make it easy to share prospecting data when playing on a server.
+ProspectTogether aims to make it easy to store, analyse and share your prospecting data.
 You can also use this mod in single player.
 The only downside compared to ProspectorInfo is that this mod also needs to be installed on the server.
 
@@ -15,12 +15,22 @@ To be more specific, in the `%Vintage_Story_Data%/ModData/YourWorldId/` director
 Note that there have been cases, where ProspectorInfo was unable to parse the output of the Prospecting Pick.
 These entries cannot be imported. So you might have to prospect some chunks again.
 
-If you want to share your existing prospecting data with other players on the server, use `.pt sendall`.
-This will send all your prospecting data to the server and all other players. You only have to do this once.
+## Data Sharing
+If you want to share your existing prospecting data with other players on the server, use `.pt sendall` or the "Send All Now" on the map dialog (use `.pt showgui` to open it).
+This will send all your prospecting data to the server and all other players. You usually only have to do this once.
 The server stores this information in `%Vintage_Story_Data%/ModData/YourWorldId/prospectTogetherServer.json`.
 If you also want to share newly added prospecting data in the future, enable autosharing. 
-You can do this either via the dialog on the map (use `.pt showgui` to open it if it is missing) or by using `.pt autoshare true`.
-Note that autosharing is enabled by default, but you might want to disable it on a PvP server.
+You can do this either via the dialog on the map (use `.pt showgui` to open it) or by using `.pt autoshare true`.
+
+If you play on a PvP server, you may only want to share your data with a certain group of players.
+To do so, open the map and type `.pt showgui`. In the dialog, select the group that you want to share your data with.
+You can use the "Send All Now" button, to send all your prospecting data to the selected group.
+
+When autosharing is enabled, you will send all future prospecting data to the configured group.
+Data sent to "All players" will be received by all players, regardless of their configured group.
+Data sent to the configured group, will only be received by players in that group.
+If autosharing is disabled, you will neither send nor receive any prospecting data.
+
 
 
 ## Client Commands
@@ -52,7 +62,8 @@ Note that autosharing is enabled by default, but you might want to disable it on
     HeatMapOre [oreName] - The ore selected for the heatmap.
     MapMode [0-1] - The mode of the map.
     SaveIntervalMinutes [1-60] - Periodically store the prospecting data every x minutes. Default: 5
-    AutoShare [true,false] - Share prospecting data with all players on the server. Default: true
+    AutoShare [true,false] - Share prospecting data with configured players on the server. Default: false
+    ShareGroupUid [int] - Group Uid to which your data is sent. Use -1 for all players. Default: -1
 
 ## Server Commands (requires admin role)
 

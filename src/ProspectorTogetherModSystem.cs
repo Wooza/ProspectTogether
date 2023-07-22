@@ -4,6 +4,7 @@ using HarmonyLib;
 using Newtonsoft.Json.Linq;
 using ProspectTogether.Client;
 using ProspectTogether.Server;
+using ProspectTogether.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,8 +42,8 @@ namespace ProspectTogether
             ClientApi = api;
             ClientConfig = api.LoadOrCreateConfig<ClientModConfig>(this);
 
-            MigrateDataFileFromProspectorInfo(api);
-            MigrationSerializationFormatToV1(CLIENT_DATAFILE, api);
+            MigrateClientDataFileFromProspectorInfo(api);
+            MigrateSerializationFormatToV1(CLIENT_DATAFILE, api);
 
             ClientStorage = new ClientStorage(api, ClientConfig, CLIENT_DATAFILE);
             ClientStorage.StartClientSide();
@@ -54,7 +55,8 @@ namespace ProspectTogether
         {
             ServerApi = api;
             ServerConfig = api.LoadOrCreateConfig<ServerModConfig>(this);
-            MigrationSerializationFormatToV1(SERVER_DATAFILE, api);
+            MigrateSerializationFormatToV1(SERVER_DATAFILE, api);
+            MigrateServerV1ToV2(SERVER_DATAFILE, api);
 
             ServerStorage = new ServerStorage(api, ServerConfig, SERVER_DATAFILE);
             ServerStorage.StartServerSide();
@@ -80,7 +82,7 @@ namespace ProspectTogether
             return TextCommandResult.Success($"Set Server SaveIntervalMinutes to {ServerConfig.SaveIntervalMinutes}.");
         }
 
-        private void MigrateDataFileFromProspectorInfo(ICoreClientAPI api)
+        private static void MigrateClientDataFileFromProspectorInfo(ICoreClientAPI api)
         {
             var oldPath = Path.Combine(GamePaths.DataPath, "ModData", api.GetWorldId(), PROSPECTOR_INFO_FILE_NAME);
             if (!File.Exists(oldPath))
@@ -96,7 +98,7 @@ namespace ProspectTogether
             File.Copy(oldPath, newPath, false);
         }
 
-        private void MigrationSerializationFormatToV1(string filename, ICoreAPI api)
+        private static void MigrateSerializationFormatToV1(string filename, ICoreAPI api)
         {
             // Try to migrate old stored data
             var dataPath = Path.Combine(GamePaths.DataPath, "ModData", api.GetWorldId(), filename);
@@ -108,6 +110,7 @@ namespace ProspectTogether
             {
                 var content = File.ReadAllText(dataPath);
 
+                // The format used by ProspectorInfo has an array at the top level.
                 var result = JToken.Parse(content);
                 if (!(result is JArray))
                 {
@@ -153,6 +156,60 @@ namespace ProspectTogether
             catch (Exception e)
             {
                 api.World.Logger.Error($"Failed to migrate prospecting data file at '{dataPath}', with an error of '{e}'! Either delete that file or check what is causing the problem.");
+                throw e;
+            }
+        }
+        private static void MigrateServerV1ToV2(String filename, ICoreAPI api)
+        {
+            var dataPath = Path.Combine(GamePaths.DataPath, "ModData", api.GetWorldId(), filename);
+            if (!File.Exists(dataPath))
+            {
+                return;
+            }
+
+            try
+            {
+                var content = File.ReadAllText(dataPath);
+                var result = JToken.Parse(content);
+                var rootNode = result as JObject;
+                int version = rootNode.GetValue("Version").ToObject<int>();
+                if (version != 1)
+                {
+                    // Nothing to do for us
+                    return;
+                }
+
+                var newPath = Path.Combine(GamePaths.DataPath, "ModData", api.GetWorldId(), filename + ".bak_v1_to_v2");
+                if (File.Exists(newPath))
+                {
+                    // Something strange happened
+                    throw new Exception("Tried to migrate server data to v2, but backup already exists?");
+                }
+                File.Copy(dataPath, newPath, false);
+
+
+                JObject allGroup = new JObject
+                {
+                    ["GroupId"] = new JValue(Constants.ALL_GROUP_ID),
+                    ["Info"] = rootNode["ProspectInfos"]
+                };
+
+                JArray groupArray = new JArray
+                {
+                    allGroup
+                };
+
+                JObject newRoot = new JObject
+                {
+                    ["Version"] = new JValue(2),
+                    ["InfoPerGroup"] = groupArray
+                };
+
+                File.WriteAllText(dataPath, newRoot.ToString(Newtonsoft.Json.Formatting.None));
+            }
+            catch (Exception e)
+            {
+                api.World.Logger.Error($"Failed to migrate prospecting data file from v1 to v2 at '{dataPath}', with an error of '{e}'!");
                 throw e;
             }
         }

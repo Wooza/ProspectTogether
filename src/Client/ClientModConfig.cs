@@ -25,7 +25,8 @@ namespace ProspectTogether.Client
         public MapMode MapMode { get; set; } = MapMode.Default;
         public string HeatMapOre { get; set; } = null;
         public bool ShowGui { get; set; } = true;
-        public bool AutoShare { get; set; } = true;
+        public bool AutoShare { get; set; } = false;
+        public int ShareGroupUid { get; set; } = Constants.ALL_GROUP_ID;
 
     }
 

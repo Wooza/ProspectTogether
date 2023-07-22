@@ -1,7 +1,4 @@
-﻿using Foundation.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Vintagestory.API.Common;
 
 namespace ProspectTogether.Shared
@@ -10,6 +7,7 @@ namespace ProspectTogether.Shared
         where C : CommonConfig
         where A : ICoreAPI
     {
+
         protected string ChannelName { get; } = "ProspectTogether";
         protected string FileName { get; }
         protected A Api { get; }
@@ -20,7 +18,6 @@ namespace ProspectTogether.Shared
         protected bool HasChangedSinceLastSave = false;
 
         public object Lock = new object();
-        public IDictionary<ChunkCoordinate, ProspectInfo> Data = new Dictionary<ChunkCoordinate, ProspectInfo>();
 
         public CommonStorage(A api, C config, string fileName)
         {
@@ -40,26 +37,9 @@ namespace ProspectTogether.Shared
                     (int)TimeSpan.FromMinutes(Config.SaveIntervalMinutes).TotalMilliseconds);
         }
 
-        protected virtual void SaveProspectingDataFile()
-        {
-            lock (Lock)
-            {
-                if (HasChangedSinceLastSave)
-                {
-                    Api.SaveDataFile(FileName, new StoredData(Data.Values.ToList()));
-                    HasChangedSinceLastSave = false;
-                }
-            }
-        }
+        protected abstract void SaveProspectingDataFile();
 
-        protected virtual void LoadProspectingDataFile()
-        {
-            lock (Lock)
-            {
-                StoredData loaded = Api.LoadOrCreateDataFile<StoredData>(FileName);
-                Data = loaded.ProspectInfos.ToDictionary(item => item.Chunk, item => item);
-                HasChangedSinceLastSave = false;
-            }
-        }
+
+        protected abstract void LoadProspectingDataFile();
     }
 }
