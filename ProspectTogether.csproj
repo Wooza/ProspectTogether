@@ -8,7 +8,7 @@
     <ExcludeFiles Condition="'$(Configuration)'=='Debug'">**/VintagestoryAPI.*;**/VSCreativeMod.*;**/VSEssentials.*;**/VSSurvivalMod.*;**/Foundation.*</ExcludeFiles>
     <BinaryDir Condition="'$(Configuration)'=='Release'">$(SolutionDir)/release/$(AssemblyName)</BinaryDir>
     <ExcludeFiles Condition="'$(Configuration)'=='Release'">**/VintagestoryAPI.*;**/VSCreativeMod.*;**/VSEssentials.*;**/VSSurvivalMod.*;**/*.pdb;**/Foundation.*</ExcludeFiles>
-    <Version>1.1.0.rc-1</Version>
+    <Version>1.1.0.1</Version>
   </PropertyGroup>
   
   <ItemGroup>
