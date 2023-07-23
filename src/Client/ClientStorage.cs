@@ -39,7 +39,10 @@ namespace ProspectTogether.Client
 
             Api.Event.PlayerJoin += p =>
             {
-                RequestInfo();
+                if (Api.World.Player == p)
+                {
+                    RequestInfo();
+                }
             };
 
         }
