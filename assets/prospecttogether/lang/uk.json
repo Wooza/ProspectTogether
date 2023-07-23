@@ -2,5 +2,7 @@
     "dialog-show-overlay": "Показати оверлей",
     "dialog-map-mode-default": "За замовчуванням",
     "dialog-map-mode-heatmap": "Теплова карта",
-    "dialog-auto-share": "Авто. обмін"
+    "dialog-auto-share": "Авто. обмін",
+    "dialog-send-all-now": "Надіслати всім зараз",
+    "dialog-all-players": "Усім гравцям"
 }
