@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net7</TargetFramework>
     <PackageVersion>2.0.0</PackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros">
