@@ -45,7 +45,7 @@ jobs:
         $mod_name = $(Get-Content .\modinfo.json | jq -r .name)
         $mod_version = $(Get-Content .\modinfo.json | jq -r .version)
         Add-Content -Path $Env:GITHUB_ENV -Value "ARTIFACT_NAME=${mod_name}-${mod_version}"
-        Remove-Item ./bin/Release/net461/VintagestoryAPI.dll  # not sure why this makes it through the filter?
+        Remove-Item ./bin/Release/net7/VintagestoryAPI.dll  # not sure why this makes it through the filter?
       shell: pwsh
 
     - name: Upload Mod Artifact
