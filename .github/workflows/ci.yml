@@ -19,13 +19,13 @@ jobs:
     - name: Setup Build Dependencies
       run: |
         $vs_version = $(Get-Content .\modinfo.json | jq -r .dependencies.game)
-        $filename = "vs_server_${vs_version}.tar.gz"
+        $filename = "vs_server_win-x64_${vs_version}.zip"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
         Invoke-WebRequest -Uri $uri -Out $filename
         $vsdir = $(mkdir VintageStory)
         cd VintageStory
-        tar -zxvf "..\$filename" Lib/ Mods/ VintagestoryAPI.dll
+        Expand-Archive "..\$filename" -DestinationPath .
         Add-Content -Path $Env:GITHUB_ENV -Value "VINTAGE_STORY=${vsdir.FullPath}"
       shell: pwsh
 
