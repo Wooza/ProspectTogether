@@ -19,7 +19,7 @@ jobs:
     - name: Setup Build Dependencies
       run: |
         $vs_version = $(Get-Content .\modinfo.json | jq -r .dependencies.game)
-        $filename = "vs_server_linux-x64_${vs_version}.zip"
+        $filename = "vs_server_linux-x64_${vs_version}.tar.gz"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
         Invoke-WebRequest -Uri $uri -Out $filename
