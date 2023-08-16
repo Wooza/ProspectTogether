@@ -15,7 +15,7 @@ namespace ProspectTogether.Client
         private readonly int Chunksize;
         private readonly ClientStorage Storage;
         private readonly ICoreClientAPI ClientApi;
-        private readonly Dictionary<ChunkCoordinate, ProspectorOverlayMapComponent> _components = new Dictionary<ChunkCoordinate, ProspectorOverlayMapComponent>();
+        private readonly Dictionary<ChunkCoordinate, ProspectorOverlayMapComponent> _components = new();
         private readonly IWorldMapManager WorldMapManager;
         private readonly LoadedTexture[] ColorTextures = new LoadedTexture[8];
         private bool TemporaryRenderOverride = false;
