@@ -18,7 +18,7 @@ jobs:
 
     - name: Setup Build Dependencies
       run: |
-        $vs_version = $(Get-Content .\modinfo.json | jq -r .dependencies.game)
+        $vs_version = $(Get-Content .\resources\modinfo.json | jq -r .dependencies.game)
         $filename = "vs_server_linux-x64_${vs_version}.tar.gz"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
@@ -42,8 +42,8 @@ jobs:
 
     - name: Finalize Artifact
       run: |
-        $mod_name = $(Get-Content .\modinfo.json | jq -r .name)
-        $mod_version = $(Get-Content .\modinfo.json | jq -r .version)
+        $mod_name = $(Get-Content .\resources\modinfo.json | jq -r .name)
+        $mod_version = $(Get-Content .\resources\modinfo.json | jq -r .version)
         Add-Content -Path $Env:GITHUB_ENV -Value "ARTIFACT_NAME=${mod_name}"
       shell: pwsh
 
