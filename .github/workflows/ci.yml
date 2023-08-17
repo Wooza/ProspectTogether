@@ -51,6 +51,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.ARTIFACT_NAME }}
-        path: ./bin/ProspectTogether.zip
+        path: ./bin/Release/Mods/prospecttogether
 
 
