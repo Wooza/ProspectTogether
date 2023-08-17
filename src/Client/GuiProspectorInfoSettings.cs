@@ -40,7 +40,7 @@ namespace ProspectTogether.Client
                     setupAgain = true;
                 }
 
-                if (Groups.Count != capi.World.Player.Groups.Count() + 1)
+                if (Groups.Count != capi.World.Player.Groups.Length + 1)
                 {
                     Groups = new List<KeyValuePair<string, string>>();
                     Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), ModLang.Get("dialog-all-players")));

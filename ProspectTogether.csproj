@@ -1,66 +1,52 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net7</TargetFramework>
     <PackageVersion>2.0.0</PackageVersion>
-  </PropertyGroup>
-  <PropertyGroup Label="UserMacros">
-    <BinaryDir Condition="'$(Configuration)'=='Debug'">$(SolutionDir)/bin/$(AssemblyName)</BinaryDir>
-    <ExcludeFiles Condition="'$(Configuration)'=='Debug'">**/VintagestoryAPI.*;**/VSCreativeMod.*;**/VSEssentials.*;**/VSSurvivalMod.*;**/Foundation.*</ExcludeFiles>
-    <BinaryDir Condition="'$(Configuration)'=='Release'">$(SolutionDir)/release/$(AssemblyName)</BinaryDir>
-    <ExcludeFiles Condition="'$(Configuration)'=='Release'">**/VintagestoryAPI.*;**/VSCreativeMod.*;**/VSEssentials.*;**/VSSurvivalMod.*;**/*.pdb;**/Foundation.*</ExcludeFiles>
-    <Version>1.1.0</Version>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)\Mods\prospecttogether</OutputPath>
   </PropertyGroup>
   
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
       <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
+		<Private>false</Private>
     </Reference>
     <Reference Include="VSSurvivalMod">
       <HintPath>$(VINTAGE_STORY)/Mods/VSSurvivalMod.dll</HintPath>
-      <Private>False</Private>
+      <Private>false</Private>
     </Reference>
     <Reference Include="VSEssentials">
       <HintPath>$(VINTAGE_STORY)/Mods/VSEssentials.dll</HintPath>
-      <Private>False</Private>
+      <Private>false</Private>
     </Reference>
     <Reference Include="VSCreativeMod">
       <HintPath>$(VINTAGE_STORY)/Mods/VSCreativeMod.dll</HintPath>
-      <Private>False</Private>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(VINTAGE_STORY)\Lib\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
+      <Private>false</Private>
     </Reference>
     <Reference Include="0Harmony">
       <HintPath>$(VINTAGE_STORY)\Lib\0Harmony.dll</HintPath>
-      <Private>False</Private>
+      <Private>false</Private>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>$(VINTAGE_STORY)\Lib\protobuf-net.dll</HintPath>
-      <Private>False</Private>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="bin" />
-  </ItemGroup>
+		<None Include="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="resources\**"  >
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="assets\**">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Update="modinfo.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <OutFiles Include="$(OutDir)/**" Exclude="$(ExcludeFiles)" />
-  </ItemGroup>
-
-  <Target Name="CopyToBin" AfterTargets="AfterBuild">
-    <Copy SourceFiles="@(OutFiles)" DestinationFiles="@(OutFiles->'$(BinaryDir)-$(Version)/%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
-  
-  <Target Name="CleanBin" AfterTargets="Clean">
-    <RemoveDir Directories="$(BinaryDir)-$(Version)" />
-  </Target>
+<Target Name="Package" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+		<ZipDirectory DestinationFile="bin/$(TargetName).zip" SourceDirectory="$(TargetDir)" Overwrite="true" />
+	</Target>
 
 </Project>

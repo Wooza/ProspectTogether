@@ -18,8 +18,8 @@ jobs:
 
     - name: Setup Build Dependencies
       run: |
-        $vs_version = $(Get-Content .\modinfo.json | jq -r .dependencies.game)
-        $filename = "vs_server_${vs_version}.tar.gz"
+        $vs_version = $(Get-Content .\resources\modinfo.json | jq -r .dependencies.game)
+        $filename = "vs_server_linux-x64_${vs_version}.tar.gz"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
         Invoke-WebRequest -Uri $uri -Out $filename
@@ -42,16 +42,15 @@ jobs:
 
     - name: Finalize Artifact
       run: |
-        $mod_name = $(Get-Content .\modinfo.json | jq -r .name)
-        $mod_version = $(Get-Content .\modinfo.json | jq -r .version)
+        $mod_name = $(Get-Content .\resources\modinfo.json | jq -r .name)
+        $mod_version = $(Get-Content .\resources\modinfo.json | jq -r .version)
         Add-Content -Path $Env:GITHUB_ENV -Value "ARTIFACT_NAME=${mod_name}-${mod_version}"
-        Remove-Item ./bin/Release/net461/VintagestoryAPI.dll  # not sure why this makes it through the filter?
       shell: pwsh
 
     - name: Upload Mod Artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.ARTIFACT_NAME }}
-        path: ./bin/Release/net461/
+        path: ./bin/Release/Mods/prospecttogether
 
 
