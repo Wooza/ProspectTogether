@@ -68,7 +68,9 @@ namespace ProspectTogether.Shared
             if (_MessageCache == null)
             {
 
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
+                // Restore sort order
+                Values = Values.OrderBy(v => v.RelativeDensity).ThenBy(v => v.AbsoluteDensity).Reverse().ToList();
 
                 if (Values.Count > 0)
                 {
