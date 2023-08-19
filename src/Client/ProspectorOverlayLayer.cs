@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using ProspectTogether.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -117,9 +118,9 @@ namespace ProspectTogether.Client
                 }
 
                 SettingsDialog = new ProspectTogetherSettingsDialog(ClientApi, Config, RebuildMap, Storage);
+                ClientApi.Input.SetHotKeyHandler(Constants.TOGGLE_GUI_HOTKEY_CODE, OnToggleGuiHotkey);
             }
         }
-
 
         #region Handling Prospecting Data
 
@@ -154,9 +155,24 @@ namespace ProspectTogether.Client
             else
                 Config.ShowGui = (bool)args.Parsers[0].GetValue();
             Config.Save(api);
-            if (WorldMapManager.IsOpened)
-                SettingsDialog.TryOpen();
+            SettingsDialog.TryOpen();
             return TextCommandResult.Success($"Set ShowGui to {Config.ShowGui}.");
+        }
+
+        private bool OnToggleGuiHotkey(KeyCombination t1)
+        {
+
+            if (SettingsDialog.IsOpened())
+            {
+                SettingsDialog.TryClose();
+            }
+            else
+            {
+                SettingsDialog.TryOpen();
+            }
+            Config.ShowGui = SettingsDialog.IsOpened();
+            Config.Save(api);
+            return true;
         }
 
         private TextCommandResult OnSetColorCommand(TextCommandCallingArgs args)

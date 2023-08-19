@@ -5,8 +5,14 @@ ProspectTogether aims to make it easy to store, analyse and share your prospecti
 You can also use this mod in single player.
 The only downside compared to ProspectorInfo is that this mod also needs to be installed on the server.
 
-## Installation
-Just drop the file into your `Mods` folder.
+## Quick Guide
+* Drop the zip file into your `Mods` folder or use 1-click install from VSModDB.
+* Just keep prospecting, the mod will automatically record any data found while the pick is used in Density Search mode.
+* The data of each prospected chunk is shown on the map when you hold the pick in your hand or when the "Show Overlay" option is enabled.
+* Use `Ctrl + P` to quickly show/hide the settings dialog.
+* Use the heatmap setting and select an ore to see where certain ores are more likely to occur.
+* Configure autosharing if you want to share your data with the whole server or a certain group.
+
 
 ## Migration from ProspectorInfo
 
@@ -16,14 +22,14 @@ Note that there have been cases, where ProspectorInfo was unable to parse the ou
 These entries cannot be imported. So you might have to prospect some chunks again.
 
 ## Data Sharing
-If you want to share your existing prospecting data with other players on the server, use `.pt sendall` or the "Send All Now" on the map dialog (use `.pt showgui` to open it).
+If you want to share your existing prospecting data with other players on the server, use `.pt sendall` or the "Send All Now" on the map dialog (use `Ctrl + P` to open it).
 This will send all your prospecting data to the server and all other players. You usually only have to do this once.
 The server stores this information in `%Vintage_Story_Data%/ModData/YourWorldId/prospectTogetherServer.json`.
 If you also want to share newly added prospecting data in the future, enable autosharing. 
-You can do this either via the dialog on the map (use `.pt showgui` to open it) or by using `.pt autoshare true`.
+You can do this either via the dialog on the map (use `Ctrl + P` to open it) or by using `.pt autoshare true`.
 
 If you play on a PvP server, you may only want to share your data with a certain group of players.
-To do so, open the map and type `.pt showgui`. In the dialog, select the group that you want to share your data with.
+Use `Ctrl + P` to open the settings. In the dialog, select the group that you want to share your data with.
 You can use the "Send All Now" button, to send all your prospecting data to the selected group.
 
 When autosharing is enabled, you will send all future prospecting data to the configured group.

@@ -49,6 +49,8 @@ namespace ProspectTogether
             ClientStorage.StartClientSide();
             var mapManager = api.ModLoader.GetModSystem<WorldMapManager>();
             mapManager.RegisterMapLayer<ProspectorOverlayLayer>(Name);
+
+            ClientApi.Input.RegisterHotKey(Constants.TOGGLE_GUI_HOTKEY_CODE, ModLang.Get("hotkey-toggle-gui"), GlKeys.P, type: HotkeyType.HelpAndOverlays, ctrlPressed: true);
         }
 
         public override void StartServerSide(ICoreServerAPI api)
