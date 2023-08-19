@@ -16,6 +16,7 @@ namespace ProspectTogether.Client
 
         public bool RenderTexturesOnMap { get; set; } = false;
         public ColorWithAlpha TextureColor { get; set; } = new ColorWithAlpha(150, 125, 150, 128);
+        public ColorWithAlpha ZeroHeatColor { get; set; } = new ColorWithAlpha(0, 0, 0, 0);
         public ColorWithAlpha LowHeatColor { get; set; } = new ColorWithAlpha(85, 85, 181, 128);
         public ColorWithAlpha HighHeatColor { get; set; } = new ColorWithAlpha(168, 34, 36, 128);
         public ColorWithAlpha BorderColor { get; set; } = new ColorWithAlpha(0, 0, 0, 200);

@@ -45,7 +45,7 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
     .pt showoverlay [true,false] - Show or hide the overlay on the map. Toggles without argument.
     .pt showborder [true,false] - Show or hide the border around chunks. Toggles without argument.
     .pt showgui [true,false] - Show the GUI where you can configure the mode (default or heatmap) and select the ore that should be heatmapped.
-    .pt setcolor (overlay|border|lowheat|highheat) [0-255] [0-255] [0-255] [0-255] - Sets the color of the respective element.
+    .pt setcolor (overlay|border|zeroheat|lowheat|highheat) [0-255] [0-255] [0-255] [0-255] - Sets the color of the respective element.
     .pt setborderthickness [1-5] - Sets the border thickness. 
     .pt mode [0-1] - Sets the map mode. Supported modes: 0 (Default) and 1 (Heatmap)
     .pt heatmapore [oreName] - Changes the heatmap mode to display a specific ore.
@@ -59,8 +59,9 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
 
     TextureColor [0-255] [0-255] [0-255] [0-255] - The default color to use for the overlay. Default: 150 125 150 128
     BorderColor [0-255] [0-255] [0-255] [0-255] - The default color to use for the border. Default: 0 0 0 200
-    LowHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative densitry. Default: 85 85 181 128
-    HighHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative densitry. Default: 168 34 36 128
+    ZeroHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for zero relative density. Default: 0 0 0 0
+    LowHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative density. Default: 85 85 181 128
+    HighHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative density. Default: 168 34 36 128
     BorderThickness [1-5] - The thickness, in pixels, of the border color. Default: 1
     RenderBorder [true,false] - Whether or not to render the border at all. Default: true
     AutoToggle [true,false] - Whether or not to toggle the overlay on the map automatically, 

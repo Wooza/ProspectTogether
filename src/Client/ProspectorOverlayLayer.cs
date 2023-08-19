@@ -69,13 +69,14 @@ namespace ProspectTogether.Client
                         .HandleWith(OnShowBorderCommand)
                     .EndSubCommand()
                     .BeginSubCommand("setcolor")
-                        .WithDescription(".pt setcolor (overlay|border|lowheat|highheat) [0-255] [0-255] [0-255] [0-255]<br/>" +
+                        .WithDescription(".pt setcolor (overlay|border|zeroheat|lowheat|highheat) [0-255] [0-255] [0-255] [0-255]<br/>" +
                                          "Sets the given color for the specified element.<br/>" +
                                          "You can specify a color either as RGBA, RGB or only A.<br/>" +
                                          "The lowheat and highheat colors will be blended on the heatmap based on relative density.<br/>" +
                                          "Available elements and corresponding config option:<br/>" +
                                          "overlay: TextureColor (default = 150 125 150 128)<br/>" +
                                          "border: BorderColor (default = 0 0 0 200)<br/>" +
+                                         "zeroheat: BorderColor (default = 0 0 0 0)<br/>" +
                                          "lowheat: LowHeatColor (default = 85 85 181 128)<br/>" +
                                          "highheat: HighHeatColor (default = 168 34 36 128)")
                         .WithArgs(api.ChatCommands.Parsers.WordRange("element", "overlay", "border", "lowheat", "highheat"),
@@ -189,9 +190,13 @@ namespace ProspectTogether.Client
                     colorUpdate.ApplyUpdateTo(Config.BorderColor);
                     changedColorSetting = "BorderColor";
                     break;
+                case "zeroheat":
+                    colorUpdate.ApplyUpdateTo(Config.ZeroHeatColor);
+                    changedColorSetting = "ZeroHeatColor";
+                    break;
                 case "lowheat":
                     colorUpdate.ApplyUpdateTo(Config.LowHeatColor);
-                    changedColorSetting = "LowHeadColor";
+                    changedColorSetting = "LowHeatColor";
                     break;
                 case "highheat":
                     colorUpdate.ApplyUpdateTo(Config.HighHeatColor);
@@ -292,9 +297,22 @@ namespace ProspectTogether.Client
             var colorTexture = new LoadedTexture(ClientApi, 0, Chunksize, Chunksize);
             int[] colorArray;
             if (Config.MapMode == MapMode.Heatmap)
-                colorArray = Enumerable.Repeat(ColorUtil.ColorOverlay(Config.LowHeatColor.RGBA, Config.HighHeatColor.RGBA, 1 * (int)relativeDensity / 8.0f), Chunksize * Chunksize).ToArray();
+            {
+                int color;
+                if (relativeDensity == RelativeDensity.Zero)
+                {
+                    color = Config.ZeroHeatColor.RGBA;
+                }
+                else
+                {
+                    color = ColorUtil.ColorOverlay(Config.LowHeatColor.RGBA, Config.HighHeatColor.RGBA, 1 * ((int)relativeDensity - 1) / 7.0f);
+                }
+                colorArray = Enumerable.Repeat(color, Chunksize * Chunksize).ToArray();
+            }
             else
+            {
                 colorArray = Enumerable.Repeat(Config.TextureColor.RGBA, Chunksize * Chunksize).ToArray();
+            }
 
             if (Config.RenderBorder)
             {

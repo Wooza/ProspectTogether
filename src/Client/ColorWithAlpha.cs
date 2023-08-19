@@ -7,10 +7,10 @@ namespace ProspectTogether.Client
     {
         public ColorWithAlpha(byte r, byte g, byte b, byte a)
         {
-            this.Red = r;
-            this.Green = g;
-            this.Blue = b;
-            this.Alpha = a;
+            Red = r;
+            Green = g;
+            Blue = b;
+            Alpha = a;
         }
 
         public byte Red { get; set; }
@@ -19,6 +19,6 @@ namespace ProspectTogether.Client
         public byte Alpha { get; set; }
 
         [JsonIgnore]
-        public int RGBA { get => ColorUtil.ToRgba(this.Alpha, this.Blue, this.Green, this.Red); }
+        public int RGBA => ColorUtil.ToRgba(Alpha, Blue, Green, Red);
     }
 }
