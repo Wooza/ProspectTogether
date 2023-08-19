@@ -142,13 +142,13 @@ namespace ProspectTogether.Client
         [JsonConstructor]
         public ClientStoredData(int version, List<ProspectInfo> prospectInfos)
         {
-            this.Version = version;
-            this.ProspectInfos = prospectInfos;
+            Version = version;
+            ProspectInfos = prospectInfos;
         }
 
         public ClientStoredData(List<ProspectInfo> prospectInfos)
         {
-            this.ProspectInfos = prospectInfos;
+            ProspectInfos = prospectInfos;
         }
 
     }

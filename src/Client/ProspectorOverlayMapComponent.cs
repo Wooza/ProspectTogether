@@ -9,20 +9,20 @@ namespace ProspectTogether.Client
     public class ProspectorOverlayMapComponent : MapComponent
     {
         public readonly ChunkCoordinate _chunkCoordinates;
-        
+
         private readonly string _message;
         private readonly int _chunksize;
 
-        private LoadedTexture colorTexture;
-        private Vec3d worldPos = new Vec3d();
+        private readonly LoadedTexture colorTexture;
+        private readonly Vec3d worldPos = new Vec3d();
         private Vec2f viewPos = new Vec2f();
 
         public ProspectorOverlayMapComponent(ICoreClientAPI clientApi, ChunkCoordinate coords, string message, LoadedTexture colorTexture) : base(clientApi)
         {
-            this._chunkCoordinates = coords;
-            this._message = message;
-            this._chunksize = clientApi.World.BlockAccessor.ChunkSize;
-            this.worldPos = new Vec3d(coords.X * _chunksize, 0, coords.Z * _chunksize);
+            _chunkCoordinates = coords;
+            _message = message;
+            _chunksize = clientApi.World.BlockAccessor.ChunkSize;
+            worldPos = new Vec3d(coords.X * _chunksize, 0, coords.Z * _chunksize);
             this.colorTexture = colorTexture;
         }
 
@@ -44,14 +44,14 @@ namespace ProspectTogether.Client
 
         public override void Render(GuiElementMap map, float dt)
         {
-            map.TranslateWorldPosToViewPos(this.worldPos, ref this.viewPos);
+            map.TranslateWorldPosToViewPos(worldPos, ref viewPos);
 
-            base.capi.Render.Render2DTexture(
-                this.colorTexture.TextureId,
+            capi.Render.Render2DTexture(
+                colorTexture.TextureId,
                 (int)(map.Bounds.renderX + viewPos.X),
                 (int)(map.Bounds.renderY + viewPos.Y),
-                (int)(this.colorTexture.Width * map.ZoomLevel),
-                (int)(this.colorTexture.Height * map.ZoomLevel),
+                (int)(colorTexture.Width * map.ZoomLevel),
+                (int)(colorTexture.Height * map.ZoomLevel),
                 50);
         }
     }

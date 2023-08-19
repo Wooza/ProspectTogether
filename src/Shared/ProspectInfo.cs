@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ProtoBuf;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Vintagestory.API.Config;
 
@@ -18,8 +19,6 @@ namespace ProspectTogether.Shared
                 { RelativeDensity.UltraHigh , "propick-density-ultrahigh" }
             };
 
-
-
         [ProtoMember(1)]
         public readonly ChunkCoordinate Chunk;
 
@@ -27,7 +26,7 @@ namespace ProspectTogether.Shared
         /// A sorted list of all ore occurencies in this chunk. The ore with the highest relative density is first.
         /// </summary>
         [ProtoMember(2)]
-        public List<OreOccurence> Values = new List<OreOccurence>();
+        public List<OreOccurence> Values = new();
 
         /// <summary>
         /// The return value from <see cref="GetMessage"/> if it was called at least once. Used to avoid multiple StringBuilder calls.
@@ -115,16 +114,16 @@ namespace ProspectTogether.Shared
         }
     }
 
-    [ProtoBuf.ProtoContract(ImplicitFields = ProtoBuf.ImplicitFields.None)]
+    [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public readonly struct OreOccurence
     {
-        [ProtoBuf.ProtoMember(1)]
+        [ProtoMember(1)]
         public readonly string Name;
-        [ProtoBuf.ProtoMember(2)]
+        [ProtoMember(2)]
         public readonly string PageCode;
-        [ProtoBuf.ProtoMember(3, IsRequired = true)]
+        [ProtoMember(3, IsRequired = true)]
         public readonly RelativeDensity RelativeDensity;
-        [ProtoBuf.ProtoMember(4)]
+        [ProtoMember(4)]
         public readonly double AbsoluteDensity;
 
         [JsonConstructor]
@@ -149,12 +148,12 @@ namespace ProspectTogether.Shared
         UltraHigh
     }
 
-    [ProtoBuf.ProtoContract(ImplicitFields = ProtoBuf.ImplicitFields.None)]
+    [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public struct ChunkCoordinate
     {
-        [ProtoBuf.ProtoMember(1)]
+        [ProtoMember(1)]
         public int X;
-        [ProtoBuf.ProtoMember(2)]
+        [ProtoMember(2)]
         public int Z;
 
         public ChunkCoordinate(int x, int z)
