@@ -123,6 +123,13 @@ namespace ProspectTogether.Client
             {
                 ClientStoredData loaded = Api.LoadOrCreateDataFile<ClientStoredData>(FileName);
                 Data = loaded.ProspectInfos.ToDictionary(item => item.Chunk, item => item);
+                foreach (ProspectInfo info in Data.Values)
+                {
+                    foreach (OreOccurence occurence in info.Values)
+                    {
+                        FoundOreNames.Add(occurence.Name);
+                    }
+                }
                 HasChangedSinceLastSave = false;
             }
         }
