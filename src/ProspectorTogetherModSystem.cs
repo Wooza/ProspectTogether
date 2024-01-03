@@ -48,7 +48,8 @@ namespace ProspectTogether
             ClientStorage = new ClientStorage(api, ClientConfig, CLIENT_DATAFILE);
             ClientStorage.StartClientSide();
             var mapManager = api.ModLoader.GetModSystem<WorldMapManager>();
-            mapManager.RegisterMapLayer<ProspectorOverlayLayer>(Name);
+            // Ingame Prospecting is at 0.75, so we place ourselves just below
+            mapManager.RegisterMapLayer<ProspectorOverlayLayer>(Name, 0.76);
 
             ClientApi.Input.RegisterHotKey(Constants.TOGGLE_GUI_HOTKEY_CODE, ModLang.Get("hotkey-toggle-gui"), GlKeys.P, type: HotkeyType.HelpAndOverlays, ctrlPressed: true);
         }

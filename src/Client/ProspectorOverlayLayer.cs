@@ -23,7 +23,7 @@ namespace ProspectTogether.Client
         private static ClientModConfig Config;
         private static GuiDialog SettingsDialog;
 
-        public override string Title => "ProspectorOverlay";
+        public override string Title => "ProspectTogether";
         public override EnumMapAppSide DataSide => EnumMapAppSide.Client;
 
         public ProspectorOverlayLayer(ICoreAPI api, IWorldMapManager mapSink) : base(api, mapSink)
@@ -288,6 +288,8 @@ namespace ProspectTogether.Client
 
         private bool ProspectingPickInHand => ClientApi?.World?.Player?.InventoryManager?.ActiveHotbarSlot?.Itemstack?.Item?.Code?
                 .FirstPathPart()?.ToLower().StartsWith("prospectingpick") ?? false;
+
+        public override string LayerGroupCode => "prospect-together";
 
         #endregion
 
