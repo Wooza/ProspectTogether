@@ -10,7 +10,8 @@ namespace ProspectTogether.Shared
     [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public class ProspectInfo
     {
-        private static readonly Dictionary<RelativeDensity, string> RelativeDensityToLang = new Dictionary<RelativeDensity, string>{
+        private static readonly Dictionary<RelativeDensity, string> RelativeDensityToLang = new()
+        {
                 { RelativeDensity.VeryPoor, "propick-density-verypoor" },
                 { RelativeDensity.Poor, "propick-density-poor"},
                 { RelativeDensity.Decent, "propick-density-decent" },
@@ -74,7 +75,7 @@ namespace ProspectTogether.Shared
                 if (Values.Count > 0)
                 {
                     sb.AppendLine(Lang.Get("propick-reading-title", Values.Count));
-                    List<string> traces = new List<string>();
+                    List<string> traces = new();
 
                     foreach (var elem in Values)
                     {

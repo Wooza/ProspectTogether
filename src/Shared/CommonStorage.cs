@@ -17,7 +17,7 @@ namespace ProspectTogether.Shared
         private long? SaveTickListenerId = null;
         protected bool HasChangedSinceLastSave = false;
 
-        public object Lock = new object();
+        public object Lock = new();
 
         public CommonStorage(A api, C config, string fileName)
         {

@@ -30,7 +30,7 @@ namespace ProspectTogether.Client
 
     public class ColorWithAlphaArgParser : ArgumentParserBase
     {
-        private ColorWithAlphaUpdate value = new ColorWithAlphaUpdate(null, null, null, null);
+        private ColorWithAlphaUpdate value = new(null, null, null, null);
 
         public ColorWithAlphaArgParser(string argName, bool isMandatoryArg) : base(argName, isMandatoryArg)
         {

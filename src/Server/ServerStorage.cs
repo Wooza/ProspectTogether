@@ -15,7 +15,7 @@ namespace ProspectTogether.Server
         private IServerNetworkChannel ServerChannel;
 
         // Group id to to chunk to prospecting data
-        public Dictionary<int, Dictionary<ChunkCoordinate, ProspectInfo>> Data = new Dictionary<int, Dictionary<ChunkCoordinate, ProspectInfo>>();
+        public Dictionary<int, Dictionary<ChunkCoordinate, ProspectInfo>> Data = new();
 
         public ServerStorage(ICoreServerAPI api, ServerModConfig config, string fileName) : base(api, config, fileName)
         {
@@ -63,7 +63,7 @@ namespace ProspectTogether.Server
                 }
                 HasChangedSinceLastSave = true;
             }
-            ServerBroadcastsProspectingPacket broadCastPacket = new ServerBroadcastsProspectingPacket(packet.Data);
+            ServerBroadcastsProspectingPacket broadCastPacket = new(packet.Data);
 
             if (packet.GroupId == Constants.ALL_GROUP_ID)
             {
@@ -112,7 +112,7 @@ namespace ProspectTogether.Server
             {
                 if (HasChangedSinceLastSave)
                 {
-                    List<GroupData> data = new List<GroupData>();
+                    List<GroupData> data = new();
                     foreach (KeyValuePair<int, Dictionary<ChunkCoordinate, ProspectInfo>> item in Data)
                     {
                         data.Add(new GroupData(item.Key, item.Value.Values.ToList()));
@@ -140,7 +140,7 @@ namespace ProspectTogether.Server
 
         public int Version = 2;
 
-        public List<GroupData> InfoPerGroup = new List<GroupData>();
+        public List<GroupData> InfoPerGroup = new();
 
         public ServerStoredData()
         {
@@ -163,7 +163,7 @@ namespace ProspectTogether.Server
     {
         public int GroupId;
 
-        public List<ProspectInfo> Info = new List<ProspectInfo>();
+        public List<ProspectInfo> Info = new();
 
         public GroupData() { }
 

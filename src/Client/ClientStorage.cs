@@ -14,7 +14,7 @@ namespace ProspectTogether.Client
 
         public IEnumerable<KeyValuePair<string, string>> FoundOres { get { return AllOres.Where((pair) => FoundOreNames.Contains(pair.Value)); } }
         private readonly Dictionary<string, string> AllOres = new OreNames();
-        private readonly HashSet<string> FoundOreNames = new HashSet<string>();
+        private readonly HashSet<string> FoundOreNames = new();
 
         public event Action<ICollection<ProspectInfo>> OnChanged;
 
@@ -140,7 +140,7 @@ namespace ProspectTogether.Client
 
         public int Version = 1;
 
-        public List<ProspectInfo> ProspectInfos = new List<ProspectInfo>();
+        public List<ProspectInfo> ProspectInfos = new();
 
         public ClientStoredData()
         {

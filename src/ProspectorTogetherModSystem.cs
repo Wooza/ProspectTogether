@@ -68,7 +68,7 @@ namespace ProspectTogether
                     .WithDescription("ProspectTogether server main command.")
                     .RequiresPrivilege(Privilege.root)
                     .BeginSubCommand("setsaveintervalminutes")
-                        .WithDescription(".pt setsaveintervalminutes [int] - How often should the prospecting data be saved to disk.<br/>" +
+                        .WithDescription("/pt setsaveintervalminutes [int] - How often should the prospecting data be saved to disk.<br/>" +
                                          "The data is also saved when leaving a world.<br/>" +
                                          "Sets the \"SaveIntervalMinutes\" config option (default = 1)")
                         .WithArgs(api.ChatCommands.Parsers.IntRange("interval", 1, 60))
@@ -122,7 +122,7 @@ namespace ProspectTogether
                 JArray rootArray = result as JArray;
 
                 // Remove entries that could not be parsed in the past.
-                List<JObject> toDelete = new List<JObject>();
+                List<JObject> toDelete = new();
                 foreach (JObject item in rootArray.Cast<JObject>())
                 {
                     if (item["Values"].Type == JTokenType.Null)
@@ -138,8 +138,8 @@ namespace ProspectTogether
                 // Remove old values and group X and Z into chunk.
                 foreach (JObject entry in rootArray.Cast<JObject>())
                 {
-                    JObject chunk = new JObject
-                {
+                    JObject chunk = new()
+                    {
                     { "X", entry["X"] },
                     { "Z", entry["Z"] }
                 };
@@ -150,7 +150,7 @@ namespace ProspectTogether
                 }
 
                 // Add version header
-                JObject newRoot = new JObject();
+                JObject newRoot = new();
                 newRoot["Version"] = new JValue(1);
                 newRoot["ProspectInfos"] = rootArray;
 
@@ -159,7 +159,7 @@ namespace ProspectTogether
             catch (Exception e)
             {
                 api.World.Logger.Error($"Failed to migrate prospecting data file at '{dataPath}', with an error of '{e}'! Either delete that file or check what is causing the problem.");
-                throw e;
+                throw;
             }
         }
         private static void MigrateServerV1ToV2(String filename, ICoreAPI api)
@@ -191,18 +191,18 @@ namespace ProspectTogether
                 File.Copy(dataPath, newPath, false);
 
 
-                JObject allGroup = new JObject
+                JObject allGroup = new()
                 {
                     ["GroupId"] = new JValue(Constants.ALL_GROUP_ID),
                     ["Info"] = rootNode["ProspectInfos"]
                 };
 
-                JArray groupArray = new JArray
+                JArray groupArray = new()
                 {
                     allGroup
                 };
 
-                JObject newRoot = new JObject
+                JObject newRoot = new()
                 {
                     ["Version"] = new JValue(2),
                     ["InfoPerGroup"] = groupArray
@@ -213,7 +213,7 @@ namespace ProspectTogether
             catch (Exception e)
             {
                 api.World.Logger.Error($"Failed to migrate prospecting data file from v1 to v2 at '{dataPath}', with an error of '{e}'!");
-                throw e;
+                throw;
             }
         }
 

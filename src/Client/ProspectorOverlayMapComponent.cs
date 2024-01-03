@@ -14,8 +14,8 @@ namespace ProspectTogether.Client
         private readonly int _chunksize;
 
         private readonly LoadedTexture colorTexture;
-        private readonly Vec3d worldPos = new Vec3d();
-        private Vec2f viewPos = new Vec2f();
+        private readonly Vec3d worldPos = new();
+        private Vec2f viewPos = new();
 
         public ProspectorOverlayMapComponent(ICoreClientAPI clientApi, ChunkCoordinate coords, string message, LoadedTexture colorTexture) : base(clientApi)
         {

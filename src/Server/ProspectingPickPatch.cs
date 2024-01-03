@@ -72,7 +72,7 @@ namespace ProspectTogether.Server
             }
 
             ProspectTogetherModSystem mod = world.Api.ModLoader.GetModSystem<ProspectTogetherModSystem>();
-            ProspectInfo info = new ProspectInfo(new ChunkCoordinate(pos.X / chunksize, pos.Z / chunksize), occurences);
+            ProspectInfo info = new(new ChunkCoordinate(pos.X / chunksize, pos.Z / chunksize), occurences);
             mod.ServerStorage.UserProspected(info, splr);
         }
     }

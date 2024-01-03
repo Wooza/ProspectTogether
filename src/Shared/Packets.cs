@@ -30,7 +30,7 @@ namespace ProspectTogether.Shared
     {
 
         [ProtoMember(1)]
-        public List<ProspectInfo> Data = new List<ProspectInfo>();
+        public List<ProspectInfo> Data = new();
 
         [ProtoMember(2)]
         public int GroupId = Constants.ALL_GROUP_ID;
@@ -52,7 +52,7 @@ namespace ProspectTogether.Shared
     {
 
         [ProtoMember(1)]
-        public List<ProspectInfo> Data = new List<ProspectInfo>();
+        public List<ProspectInfo> Data = new();
 
         public ServerBroadcastsProspectingPacket() { }
 
