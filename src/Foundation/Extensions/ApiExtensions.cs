@@ -31,7 +31,7 @@ namespace Foundation.Extensions
                 if (File.Exists(path))
                 {
                     api.World.Logger.LogRaw(EnumLogType.Error, $"Failed loading file '{path}' with error '{e}'!");
-                    throw e;
+                    throw;
                 }
                 else
                 {
