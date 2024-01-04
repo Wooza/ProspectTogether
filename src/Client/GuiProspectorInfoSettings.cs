@@ -11,9 +11,17 @@ namespace ProspectTogether.Client
     {
         public override string ToggleKeyCombinationCode => "prospecttogethersettings";
         private readonly ClientModConfig Config;
+
+        // Callback to update the map
         private readonly Action<bool> RebuildMap;
+
+        // Ores that are displayed in the ore selection
         private List<KeyValuePair<string, string>> Ores;
+        private readonly int NumFixedOreEntries;
+
+        // Groups that are displayed in the group selection
         private List<KeyValuePair<string, string>> Groups;
+        private readonly int NumFixedGroupEntries;
         private readonly ClientStorage Storage;
 
         public ProspectTogetherSettingsDialog(ICoreClientAPI capi, ClientModConfig config, Action<bool> rebuildMap, ClientStorage storage) : base(capi)
@@ -21,11 +29,59 @@ namespace ProspectTogether.Client
             Storage = storage;
             Config = config;
             RebuildMap = rebuildMap;
-            Ores = new List<KeyValuePair<string, string>>();
-            Ores.Insert(0, new KeyValuePair<string, string>("All ores", null));
-            Groups = new List<KeyValuePair<string, string>>();
-            Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), ModLang.Get("dialog-all-players")));
+
+            Ores = new List<KeyValuePair<string, string>>
+            {
+                new("All ores", null)
+            };
+            NumFixedOreEntries = Ores.Count;
+
+            Groups = new List<KeyValuePair<string, string>>
+            {
+                new(ModLang.Get("dialog-all-players"), Constants.ALL_GROUP_ID.ToString()),
+                new("Unknown Group", Constants.UNKNOWN_GROUP_ID.ToString())
+            };
+            NumFixedGroupEntries = Groups.Count;
+
             SetupDialog();
+        }
+
+        private bool UpdateOres()
+        {
+            HashSet<string> oldOres = Ores.Select((pair) => pair.Value).Skip(NumFixedOreEntries).ToHashSet();
+            HashSet<string> newOres = Storage.FoundOres.Select((pair) => pair.Value).ToHashSet();
+
+            if (!oldOres.Equals(newOres))
+            {
+                if (Ores.Count > NumFixedOreEntries)
+                {
+                    Ores.RemoveRange(NumFixedOreEntries, Ores.Count - NumFixedOreEntries);
+                }
+                Ores.AddRange(Storage.FoundOres.OrderBy((pair) => pair.Key).ToList());
+                return true;
+            }
+            return false;
+        }
+
+        private bool UpdateGroups()
+        {
+            HashSet<string> oldGroups = Groups.Select((pair) => pair.Value).Skip(NumFixedGroupEntries).ToHashSet();
+            HashSet<string> newGroups = capi.World.Player.Groups.Select((g) => g.GroupUid.ToString()).ToHashSet();
+
+            if (!oldGroups.Equals(newGroups))
+            {
+                if (Groups.Count > NumFixedGroupEntries)
+                {
+                    Groups.RemoveRange(NumFixedGroupEntries, Groups.Count - NumFixedGroupEntries);
+                }
+
+                foreach (PlayerGroupMembership group in capi.World.Player.Groups)
+                {
+                    Groups.Add(new KeyValuePair<string, string>(group.GroupName, group.GroupUid.ToString()));
+                }
+                return true;
+            }
+            return false;
         }
 
         public override bool TryOpen()
@@ -33,23 +89,8 @@ namespace ProspectTogether.Client
             lock (Storage.Lock)
             {
                 bool setupAgain = false;
-                if (Ores.Count != Storage.FoundOres.Count() + 1)
-                {
-                    Ores = Storage.FoundOres.OrderBy((pair) => pair.Key).ToList();
-                    Ores.Insert(0, new KeyValuePair<string, string>("All ores", null));
-                    setupAgain = true;
-                }
-
-                if (Groups.Count != capi.World.Player.Groups.Length + 1)
-                {
-                    Groups = new List<KeyValuePair<string, string>>();
-                    Groups.Insert(0, new KeyValuePair<string, string>(Constants.ALL_GROUP_ID.ToString(), ModLang.Get("dialog-all-players")));
-                    foreach (PlayerGroupMembership group in capi.World.Player.Groups)
-                    {
-                        Groups.Add(new KeyValuePair<string, string>(group.GroupUid.ToString(), group.GroupName));
-                    }
-                    setupAgain = true;
-                }
+                setupAgain |= UpdateOres();
+                setupAgain |= UpdateGroups();
 
                 if (setupAgain)
                 {
@@ -86,12 +127,27 @@ namespace ProspectTogether.Client
                     currentHeatmapOreIndex = 0;
             }
 
-            var currentGroupIndex = 0;
-            var search = Groups.FindIndex(pair => pair.Key == Config.ShareGroupUid.ToString());
-            if (search != -1)
+            int currentGroupIndex;
+            if (Config.ShareGroupUid == Constants.ALL_GROUP_ID)
             {
-                currentGroupIndex = search;
+                currentGroupIndex = 0;
             }
+            else
+            {
+                var search = Groups.FindIndex(pair => pair.Value == Config.ShareGroupUid.ToString());
+                if (search == -1)
+                {
+                    // Unknown group
+                    currentGroupIndex = 1;
+                }
+                else
+                {
+                    // Group Found
+                    currentGroupIndex = search;
+                }
+            }
+
+
 
 
             SingleComposer = capi.Gui.CreateCompo("ProspectTogether Settings", dialogBounds)
@@ -99,11 +155,14 @@ namespace ProspectTogether.Client
                 .AddDialogTitleBar("ProspectTogether", OnCloseTitleBar)
                 .AddStaticText(ModLang.Get("dialog-show-overlay"), CairoFont.WhiteDetailText(), showOverlayTextBounds)
                 .AddSwitch(OnSwitchOverlay, switchBounds, "showOverlaySwitch")
+                // Mapmode
                 .AddDropDown(new string[] { "0", "1" }, new string[] { ModLang.Get("dialog-map-mode-default"), ModLang.Get("dialog-map-mode-heatmap") }, (int)Config.MapMode, OnMapModeSelected, mapModeBounds)
+                // Ore selection
                 .AddDropDown(Ores.Select((pair) => pair.Value).ToArray(), Ores.Select((pair) => pair.Key).ToArray(), currentHeatmapOreIndex, OnHeatmapOreSelected, oreBounds)
                 .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
                 .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, "autoShareSwitch")
-                .AddDropDown(Groups.Select(p => p.Key).ToArray(), Groups.Select(p => p.Value).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds)
+                // Group selection
+                .AddDropDown(Groups.Select(p => p.Value).ToArray(), Groups.Select(p => p.Key).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds)
                 .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small)
                 .Compose();
 
