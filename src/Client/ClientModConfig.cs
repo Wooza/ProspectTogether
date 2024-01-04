@@ -1,6 +1,5 @@
 ﻿using Foundation.ModConfig;
 using ProspectTogether.Shared;
-using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 
 namespace ProspectTogether.Client

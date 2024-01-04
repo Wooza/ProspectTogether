@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Foundation.Extensions;
 using Vintagestory.API.Common;
 
 namespace Foundation.ModConfig
