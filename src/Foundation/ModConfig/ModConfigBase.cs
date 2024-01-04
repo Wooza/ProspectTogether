@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Foundation.Extensions;
 using Vintagestory.API.Common;
 
 namespace Foundation.ModConfig
@@ -12,18 +13,9 @@ namespace Foundation.ModConfig
             return caller.GetType().Namespace.Split('.').FirstOrDefault() ?? "unknown-mod-code";
         }
 
-        public void Save(ICoreAPI api, string filename = default)
+        public virtual void Save(ICoreAPI api)
         {
-            if (string.IsNullOrEmpty(filename))
-                filename = this.ModCode;
-            if (string.IsNullOrEmpty(filename))
-                filename = ModConfigBase.GetModCode(this);
-            if (!filename.EndsWith(".json"))
-                filename += ".json";
-
-            api.World.Logger.Notification($"Saving modconfig at 'ModConfig/{filename}'...");
-
-            api.StoreModConfig(this, filename);
+            api.SaveConfig(this);
         }
     }
 }

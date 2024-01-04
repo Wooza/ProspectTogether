@@ -40,7 +40,7 @@ namespace ProspectTogether
         public override void StartClientSide(ICoreClientAPI api)
         {
             ClientApi = api;
-            ClientConfig = api.LoadOrCreateConfig<ClientModConfig>(this);
+            ClientConfig = api.LoadOrCreateConfig<ClientModConfig>(this, perServer: true);
 
             MigrateClientDataFileFromProspectorInfo(api);
             MigrateSerializationFormatToV1(CLIENT_DATAFILE, api);

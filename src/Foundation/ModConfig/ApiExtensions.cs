@@ -1,18 +1,26 @@
 ﻿using System;
 using System.Linq;
+using Foundation.Extensions;
 using Vintagestory.API.Common;
 
 namespace Foundation.ModConfig
 {
     public static class ApiExtensions
     {
-        public static TModConfig LoadOrCreateConfig<TModConfig>(this ICoreAPI api, object caller, bool required = false) where TModConfig : ModConfigBase, new()
+        public static TModConfig LoadOrCreateConfig<TModConfig>(this ICoreAPI api, object caller, bool required = false, bool perServer = false) where TModConfig : ModConfigBase, new()
         {
-            var modCode = new TModConfig().ModCode;
-            if (string.IsNullOrEmpty(modCode))
-                modCode = ModConfigBase.GetModCode(caller);
+            var filename = new TModConfig().ModCode;
+            if (string.IsNullOrEmpty(filename))
+            {
+                filename = ModConfigBase.GetModCode(caller);
+            }
 
-            return LoadOrCreateConfig<TModConfig>(api, modCode + ".json", required);
+            if (perServer)
+            {
+                filename = filename + "-" + api.GetWorldId();
+            }
+
+            return LoadOrCreateConfig<TModConfig>(api, filename + ".json", required);
         }
 
         public static TModConfig LoadOrCreateConfig<TModConfig>(this ICoreAPI api, string filename, bool required) where TModConfig : ModConfigBase, new()
@@ -42,13 +50,23 @@ namespace Foundation.ModConfig
             return required ? null : newConfig;
         }
 
-        public static void SaveConfig<TModConfig>(this ICoreAPI api, TModConfig config) where TModConfig : ModConfigBase
+        public static void SaveConfig<TModConfig>(this ICoreAPI api, TModConfig config, bool perServer = false) where TModConfig : ModConfigBase
         {
             var filename = config.ModCode;
             if (string.IsNullOrEmpty(filename))
+            {
                 filename = ModConfigBase.GetModCode(config);
+            }
+
+            if (perServer)
+            {
+                filename = filename + "-" + api.GetWorldId();
+            }
+
             if (!filename.EndsWith(".json"))
+            {
                 filename += ".json";
+            }
 
             api.World.Logger.Notification($"Saving modconfig at 'ModConfig/{filename}'...");
 

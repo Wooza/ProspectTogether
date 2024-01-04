@@ -1,4 +1,7 @@
-﻿using ProspectTogether.Shared;
+﻿using Foundation.ModConfig;
+using ProspectTogether.Shared;
+using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 
 namespace ProspectTogether.Client
 {
@@ -28,6 +31,11 @@ namespace ProspectTogether.Client
         public bool ShowGui { get; set; } = true;
         public bool AutoShare { get; set; } = false;
         public int ShareGroupUid { get; set; } = Constants.ALL_GROUP_ID;
+
+        public override void Save(ICoreAPI api)
+        {
+            api.SaveConfig(this, perServer: true);
+        }
 
     }
 
