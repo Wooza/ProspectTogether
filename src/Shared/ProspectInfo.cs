@@ -81,7 +81,7 @@ namespace ProspectTogether.Shared
                     {
                         if (elem.RelativeDensity > RelativeDensity.Miniscule)
                         {
-                            sb.AppendLine(Lang.Get("propick-reading", Lang.Get(RelativeDensityToLang[elem.RelativeDensity]), elem.PageCode, Lang.Get(elem.Name), elem.AbsoluteDensity.ToString("0.#")));
+                            sb.AppendLine(Lang.Get("propick-reading", Lang.Get(RelativeDensityToLang[elem.RelativeDensity]), elem.PageCode, Lang.Get(elem.Name), elem.AbsoluteDensity.ToString("0.##")));
                         }
                         else
                         {

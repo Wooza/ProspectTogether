@@ -63,7 +63,7 @@ namespace ProspectTogether.Server
                 string pageCode = ppws.pageCodes[val.Key];
                 if (totalFactor > 0.025)
                 {
-                    occurences.Add(new OreOccurence("game:ore-" + val.Key, pageCode, (RelativeDensity)((int)GameMath.Clamp(totalFactor * 7.5f, 0, 5) + 2), Math.Round(ppt, 1)));
+                    occurences.Add(new OreOccurence("game:ore-" + val.Key, pageCode, (RelativeDensity)((int)GameMath.Clamp(totalFactor * 7.5f, 0, 5) + 2), Math.Round(ppt, 2)));
                 }
                 else if (totalFactor > 0.002)
                 {
