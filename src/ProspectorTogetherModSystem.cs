@@ -125,7 +125,7 @@ namespace ProspectTogether
                 List<JObject> toDelete = new();
                 foreach (JObject item in rootArray.Cast<JObject>())
                 {
-                    if (item["Values"].Type == JTokenType.Null)
+                    if (!item.ContainsKey("Values") || item["Values"].Type == JTokenType.Null)
                     {
                         toDelete.Add(item);
                     }
