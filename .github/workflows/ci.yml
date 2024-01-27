@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         submodules: true  # fetch Foundation
@@ -30,7 +30,7 @@ jobs:
       shell: pwsh
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.3.1
+      uses: microsoft/setup-msbuild@v1.3.2
 
     - name: Restore Mod Dependencies
       run: msbuild /t:Restore /p:Configuration=Release
@@ -48,7 +48,7 @@ jobs:
       shell: pwsh
 
     - name: Upload Mod Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.ARTIFACT_NAME }}
         path: ./bin/Release/Mods/prospecttogether
