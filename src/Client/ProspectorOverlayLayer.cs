@@ -78,7 +78,7 @@ namespace ProspectTogether.Client
                                          "zeroheat: BorderColor (default = 0 0 0 0)<br/>" +
                                          "lowheat: LowHeatColor (default = 85 85 181 128)<br/>" +
                                          "highheat: HighHeatColor (default = 168 34 36 128)")
-                        .WithArgs(api.ChatCommands.Parsers.WordRange("element", "overlay", "border", "lowheat", "highheat"),
+                        .WithArgs(api.ChatCommands.Parsers.WordRange("element", "overlay", "border", "zeroheat", "lowheat", "highheat"),
                                   new ColorWithAlphaArgParser("color", true))
                         .HandleWith(OnSetColorCommand)
                     .EndSubCommand()
