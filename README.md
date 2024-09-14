@@ -8,8 +8,7 @@ The only downside compared to ProspectorInfo is that this mod also needs to be i
 ## Quick Guide
 * Drop the zip file into your `Mods` folder or use 1-click install from VSModDB.
 * Just keep prospecting, the mod will automatically record any data found while the pick is used in Density Search mode.
-* The data of each prospected chunk is shown on the map when you hold the pick in your hand or when the "Show Overlay" option is enabled.
-* Use `Ctrl + P` to quickly show/hide the settings dialog.
+* The data of each prospected chunk is shown on the map, when the ProspectTogether map layer is enabled.
 * Use the heatmap setting and select an ore to see where certain ores are more likely to occur.
 * Configure autosharing if you want to share your data with the whole server or a certain group.
 
@@ -22,14 +21,14 @@ Note that there have been cases, where ProspectorInfo was unable to parse the ou
 These entries cannot be imported. So you might have to prospect some chunks again.
 
 ## Data Sharing
-If you want to share your existing prospecting data with other players on the server, use `.pt sendall` or the "Send All Now" on the map dialog (use `Ctrl + P` to open it).
+If you want to share your existing prospecting data with other players on the server, use `.pt sendall` or the "Send All Now" on the map dialog.
 This will send all your prospecting data to the server and all other players. You usually only have to do this once.
 The server stores this information in `%Vintage_Story_Data%/ModData/YourWorldId/prospectTogetherServer.json`.
 If you also want to share newly added prospecting data in the future, enable autosharing. 
-You can do this either via the dialog on the map (use `Ctrl + P` to open it) or by using `.pt autoshare true`.
+You can do this either via the dialog on the map or by using `.pt autoshare true`.
 
 If you play on a PvP server, you may only want to share your data with a certain group of players.
-Use `Ctrl + P` to open the settings. In the dialog, select the group that you want to share your data with.
+In the map dialog, select the group that you want to share your data with.
 You can use the "Send All Now" button, to send all your prospecting data to the selected group.
 
 When autosharing is enabled, you will send all future prospecting data to the configured group.
@@ -38,13 +37,9 @@ Data sent to the configured group, will only be received by players in that grou
 If autosharing is disabled, you will neither send nor receive any prospecting data.
 
 
-
 ## Client Commands
 
-    .pt - main command for the mod and the default sub-command is to 'showoverlay'
-    .pt showoverlay [true,false] - Show or hide the overlay on the map. Toggles without argument.
     .pt showborder [true,false] - Show or hide the border around chunks. Toggles without argument.
-    .pt showgui [true,false] - Show the GUI where you can configure the mode (default or heatmap) and select the ore that should be heatmapped.
     .pt setcolor (overlay|border|zeroheat|lowheat|highheat) [0-255] [0-255] [0-255] [0-255] - Sets the color of the respective element.
     .pt setborderthickness [1-5] - Sets the border thickness. 
     .pt mode [0-1] - Sets the map mode. Supported modes: 0 (Default) and 1 (Heatmap)
@@ -64,8 +59,6 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
     HighHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative density. Default: 168 34 36 128
     BorderThickness [1-5] - The thickness, in pixels, of the border color. Default: 1
     RenderBorder [true,false] - Whether or not to render the border at all. Default: true
-    AutoToggle [true,false] - Whether or not to toggle the overlay on the map automatically, 
-                              based on the player equipping/unequipping a prospecting pick. Default: true
     HeatMapOre [oreName] - The ore selected for the heatmap.
     MapMode [0-1] - The mode of the map.
     SaveIntervalMinutes [1-60] - Periodically store the prospecting data every x minutes. Default: 5

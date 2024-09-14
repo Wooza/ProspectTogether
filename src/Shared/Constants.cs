@@ -9,7 +9,5 @@
 
         // Magic value for an unknown group.
         public static readonly int UNKNOWN_GROUP_ID = -2;
-
-        public static readonly string TOGGLE_GUI_HOTKEY_CODE = "toggleptgui";
     }
 }

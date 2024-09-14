@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.GameContent;
 
 namespace ProspectTogether.Client
 {
-    public class ProspectTogetherSettingsDialog : GuiDialog
+    public class ProspectTogetherSettingsDialog
     {
-        public override string ToggleKeyCombinationCode => "prospecttogethersettings";
         private readonly ClientModConfig Config;
 
         // Callback to update the map
@@ -24,8 +24,11 @@ namespace ProspectTogether.Client
         private readonly int NumFixedGroupEntries;
         private readonly ClientStorage Storage;
 
-        public ProspectTogetherSettingsDialog(ICoreClientAPI capi, ClientModConfig config, Action<bool> rebuildMap, ClientStorage storage) : base(capi)
+        private readonly ICoreClientAPI Capi;
+
+        public ProspectTogetherSettingsDialog(ICoreClientAPI capi, ClientModConfig config, Action<bool> rebuildMap, ClientStorage storage)
         {
+            Capi = capi;
             Storage = storage;
             Config = config;
             RebuildMap = rebuildMap;
@@ -42,11 +45,9 @@ namespace ProspectTogether.Client
                 new("Unknown Group", Constants.UNKNOWN_GROUP_ID.ToString())
             };
             NumFixedGroupEntries = Groups.Count;
-
-            SetupDialog();
         }
 
-        private bool UpdateOres()
+        private void UpdateOres()
         {
             HashSet<string> oldOres = Ores.Select((pair) => pair.Value).Skip(NumFixedOreEntries).ToHashSet();
             HashSet<string> newOres = Storage.FoundOres.Select((pair) => pair.Value).ToHashSet();
@@ -58,15 +59,13 @@ namespace ProspectTogether.Client
                     Ores.RemoveRange(NumFixedOreEntries, Ores.Count - NumFixedOreEntries);
                 }
                 Ores.AddRange(Storage.FoundOres.OrderBy((pair) => pair.Key).ToList());
-                return true;
             }
-            return false;
         }
 
-        private bool UpdateGroups()
+        private void UpdateGroups()
         {
             HashSet<string> oldGroups = Groups.Select((pair) => pair.Value).Skip(NumFixedGroupEntries).ToHashSet();
-            HashSet<string> newGroups = capi.World.Player.Groups.Select((g) => g.GroupUid.ToString()).ToHashSet();
+            HashSet<string> newGroups = Capi.World.Player.Groups.Select((g) => g.GroupUid.ToString()).ToHashSet();
 
             if (!oldGroups.Equals(newGroups))
             {
@@ -75,34 +74,18 @@ namespace ProspectTogether.Client
                     Groups.RemoveRange(NumFixedGroupEntries, Groups.Count - NumFixedGroupEntries);
                 }
 
-                foreach (PlayerGroupMembership group in capi.World.Player.Groups)
+                foreach (PlayerGroupMembership group in Capi.World.Player.Groups)
                 {
                     Groups.Add(new KeyValuePair<string, string>(group.GroupName, group.GroupUid.ToString()));
                 }
-                return true;
             }
-            return false;
         }
 
-        public override bool TryOpen()
+        public void Compose(string key, GuiDialogWorldMap guiDialogWorldMap, GuiComposer compo)
         {
-            lock (Storage.Lock)
-            {
-                bool setupAgain = false;
-                setupAgain |= UpdateOres();
-                setupAgain |= UpdateGroups();
+            UpdateOres();
+            UpdateGroups();
 
-                if (setupAgain)
-                {
-                    SetupDialog();
-                }
-            }
-
-            return base.TryOpen();
-        }
-
-        private void SetupDialog()
-        {
             // Auto-sized dialog at the center of the screen
             ElementBounds dialogBounds = ElementStdBounds.AutosizedMainDialog.WithAlignment(EnumDialogArea.RightMiddle);
             ElementBounds backgroundBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding);
@@ -147,27 +130,23 @@ namespace ProspectTogether.Client
                 }
             }
 
+            var composer = Capi.Gui.CreateCompo("ProspectTogether Settings", dialogBounds)
+                 .AddShadedDialogBG(backgroundBounds)
+                 .AddDialogTitleBar("ProspectTogether", () => { guiDialogWorldMap.Composers[key].Enabled = false; })
+                 // Mapmode
+                 .AddDropDown(new string[] { "0", "1" }, new string[] { ModLang.Get("dialog-map-mode-default"), ModLang.Get("dialog-map-mode-heatmap") }, (int)Config.MapMode, OnMapModeSelected, mapModeBounds)
+                 // Ore selection
+                 .AddDropDown(Ores.Select((pair) => pair.Value).ToArray(), Ores.Select((pair) => pair.Key).ToArray(), currentHeatmapOreIndex, OnHeatmapOreSelected, oreBounds)
+                 .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
+                 .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, "autoShareSwitch")
+                 // Group selection
+                 .AddDropDown(Groups.Select(p => p.Value).ToArray(), Groups.Select(p => p.Key).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds)
+                 .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small)
+                 .Compose();
 
-
-
-            SingleComposer = capi.Gui.CreateCompo("ProspectTogether Settings", dialogBounds)
-                .AddShadedDialogBG(backgroundBounds)
-                .AddDialogTitleBar("ProspectTogether", OnCloseTitleBar)
-                .AddStaticText(ModLang.Get("dialog-show-overlay"), CairoFont.WhiteDetailText(), showOverlayTextBounds)
-                .AddSwitch(OnSwitchOverlay, switchBounds, "showOverlaySwitch")
-                // Mapmode
-                .AddDropDown(new string[] { "0", "1" }, new string[] { ModLang.Get("dialog-map-mode-default"), ModLang.Get("dialog-map-mode-heatmap") }, (int)Config.MapMode, OnMapModeSelected, mapModeBounds)
-                // Ore selection
-                .AddDropDown(Ores.Select((pair) => pair.Value).ToArray(), Ores.Select((pair) => pair.Key).ToArray(), currentHeatmapOreIndex, OnHeatmapOreSelected, oreBounds)
-                .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
-                .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, "autoShareSwitch")
-                // Group selection
-                .AddDropDown(Groups.Select(p => p.Value).ToArray(), Groups.Select(p => p.Key).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds)
-                .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small)
-                .Compose();
-
-            SingleComposer.GetSwitch("showOverlaySwitch").On = Config.RenderTexturesOnMap;
-            SingleComposer.GetSwitch("autoShareSwitch").On = Config.AutoShare;
+            composer.GetSwitch("autoShareSwitch").On = Config.AutoShare;
+            composer.Enabled = false;
+            guiDialogWorldMap.Composers[key] = composer;
         }
 
         private bool OnSendAll()
@@ -179,41 +158,27 @@ namespace ProspectTogether.Client
         private void OnGroupChanged(string code, bool selected)
         {
             Config.ShareGroupUid = int.Parse(code);
-            Config.Save(capi);
+            Config.Save(Capi);
             Storage.RequestInfo();
-        }
-
-        private void OnCloseTitleBar()
-        {
-            Config.ShowGui = false;
-            Config.Save(capi);
-            TryClose();
-        }
-
-        private void OnSwitchOverlay(bool value)
-        {
-            Config.RenderTexturesOnMap = value;
-            Config.Save(capi);
-            RebuildMap(true);
         }
 
         private void OnSwitchAutoShare(bool value)
         {
             Config.AutoShare = value;
-            Config.Save(capi);
+            Config.Save(Capi);
         }
 
         private void OnMapModeSelected(string code, bool selected)
         {
             Config.MapMode = (MapMode)int.Parse(code);
-            Config.Save(capi);
+            Config.Save(Capi);
             RebuildMap(true);
         }
 
         private void OnHeatmapOreSelected(string code, bool selected)
         {
             Config.HeatMapOre = code;
-            Config.Save(capi);
+            Config.Save(Capi);
             RebuildMap(true);
         }
     }

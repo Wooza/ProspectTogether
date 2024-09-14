@@ -18,9 +18,8 @@ namespace ProspectTogether.Client
         private readonly Dictionary<ChunkCoordinate, ProspectorOverlayMapComponent> _components = new();
         private readonly IWorldMapManager WorldMapManager;
         private readonly LoadedTexture[] ColorTextures = new LoadedTexture[8];
-        private bool TemporaryRenderOverride = false;
         private static ClientModConfig Config;
-        private static GuiDialog SettingsDialog;
+        private static ProspectTogetherSettingsDialog SettingsDialog;
 
         public override string Title => "ProspectTogether";
         public override EnumMapAppSide DataSide => EnumMapAppSide.Client;
@@ -38,29 +37,8 @@ namespace ProspectTogether.Client
             if (api.Side == EnumAppSide.Client)
             {
                 ClientApi = (ICoreClientAPI)api;
-                ClientApi.Event.AfterActiveSlotChanged += Event_AfterActiveSlotChanged;
-                ClientApi.Event.PlayerJoin += (p) =>
-                {
-                    if (p == ClientApi?.World.Player)
-                    {
-                        var invMan = p?.InventoryManager?.GetHotbarInventory();
-                        invMan.SlotModified += Event_SlotModified;
-                    }
-                };
-
                 ClientApi.ChatCommands.Create("pt")
-                    .WithDescription("ProspectorTogether main command. Defaults to toggling the map overlay.")
-                    .HandleWith(OnShowOverlayCommand)
-                    .BeginSubCommand("showoverlay")
-                        .WithDescription(".pt showoverlay [bool] - Shows or hides the overlay. No argument toggles instead.")
-                        .WithArgs(api.ChatCommands.Parsers.OptionalBool("show"))
-                        .HandleWith(OnShowOverlayCommand)
-                    .EndSubCommand()
-                    .BeginSubCommand("showgui")
-                        .WithDescription(".pt showgui [bool] - Shows or hides the gui whenever the map is open. No argument toggles instead.")
-                        .WithArgs(api.ChatCommands.Parsers.OptionalBool("show"))
-                        .HandleWith(OnShowGuiCommand)
-                    .EndSubCommand()
+                    .WithDescription("ProspectorTogether main command.")
                     .BeginSubCommand("showborder")
                         .WithDescription(".pt showborder [bool] - Shows or hides the tile border. No argument toggles instead.<br/>" +
                                          "Sets the \"RenderBorder\" config option (default = true)")
@@ -118,8 +96,12 @@ namespace ProspectTogether.Client
                 }
 
                 SettingsDialog = new ProspectTogetherSettingsDialog(ClientApi, Config, RebuildMap, Storage);
-                ClientApi.Input.SetHotKeyHandler(Constants.TOGGLE_GUI_HOTKEY_CODE, OnToggleGuiHotkey);
             }
+        }
+
+        public override void ComposeDialogExtras(GuiDialogWorldMap guiDialogWorldMap, GuiComposer compo)
+        {
+            SettingsDialog.Compose("worldmap-layer-" + LayerGroupCode, guiDialogWorldMap, compo);
         }
 
         #region Handling Prospecting Data
@@ -135,45 +117,6 @@ namespace ProspectTogether.Client
         #endregion
 
         #region Commands/Events
-
-        private TextCommandResult OnShowOverlayCommand(TextCommandCallingArgs args)
-        {
-            // Parser count is 0 when only calling .pi command.
-            if (args.Parsers.Count == 0 || args.Parsers[0].IsMissing)
-                Config.RenderTexturesOnMap = !Config.RenderTexturesOnMap;
-            else
-                Config.RenderTexturesOnMap = (bool)args.Parsers[0].GetValue();
-            Config.Save(api);
-            RebuildMap();
-            return TextCommandResult.Success($"Set RenderTexturesOnMap to {Config.RenderTexturesOnMap}.");
-        }
-
-        private TextCommandResult OnShowGuiCommand(TextCommandCallingArgs args)
-        {
-            if (args.Parsers[0].IsMissing)
-                Config.ShowGui = !Config.ShowGui;
-            else
-                Config.ShowGui = (bool)args.Parsers[0].GetValue();
-            Config.Save(api);
-            SettingsDialog.TryOpen();
-            return TextCommandResult.Success($"Set ShowGui to {Config.ShowGui}.");
-        }
-
-        private bool OnToggleGuiHotkey(KeyCombination t1)
-        {
-
-            if (SettingsDialog.IsOpened())
-            {
-                SettingsDialog.TryClose();
-            }
-            else
-            {
-                SettingsDialog.TryOpen();
-            }
-            Config.ShowGui = SettingsDialog.IsOpened();
-            Config.Save(api);
-            return true;
-        }
 
         private TextCommandResult OnSetColorCommand(TextCommandCallingArgs args)
         {
@@ -268,23 +211,6 @@ namespace ProspectTogether.Client
             return TextCommandResult.Success($"Sent all prospecting data to server.");
         }
 
-        private void Event_SlotModified(int slotId)
-        {
-            UpdateRenderOverride();
-        }
-        private void Event_AfterActiveSlotChanged(ActiveSlotChangeEventArgs t1)
-        {
-            UpdateRenderOverride();
-        }
-
-        private void UpdateRenderOverride()
-        {
-            if (!Config.AutoToggle)
-                return;
-
-            TemporaryRenderOverride = ProspectingPickInHand;
-        }
-
         private bool ProspectingPickInHand => ClientApi?.World?.Player?.InventoryManager?.ActiveHotbarSlot?.Itemstack?.Item?.Code?
                 .FirstPathPart()?.ToLower().StartsWith("prospectingpick") ?? false;
 
@@ -335,10 +261,6 @@ namespace ProspectTogether.Client
             return colorTexture;
         }
 
-        public bool UserDisabledMapTextures()
-        {
-            return !Config.RenderTexturesOnMap;
-        }
         #endregion
 
         public override void OnMapOpenedClient()
@@ -392,8 +314,10 @@ namespace ProspectTogether.Client
 
         public override void Render(GuiElementMap mapElem, float dt)
         {
-            if (!TemporaryRenderOverride && UserDisabledMapTextures())
+            if (!Active)
+            {
                 return;
+            }
 
             lock (Storage.Lock)
             {
@@ -412,28 +336,6 @@ namespace ProspectTogether.Client
             }
             base.Dispose();
         }
-
-        [HarmonyPatch(typeof(GuiDialogWorldMap), "TryClose")]
-        class GuiDialogWorldMapTryClosePatch
-        {
-            static void Postfix()
-            {
-                SettingsDialog.TryClose();
-            }
-        }
-
-        [HarmonyPatch(typeof(GuiDialogWorldMap), "Open")]
-        class GuiDialogWorldMapOpenPatch
-        {
-            static void Postfix(EnumDialogType type)
-            {
-                if (Config.ShowGui && type == EnumDialogType.Dialog)
-                    SettingsDialog.TryOpen();
-                else
-                    SettingsDialog.TryClose();
-            }
-        }
-
 
     }
 }
