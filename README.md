@@ -68,10 +68,12 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
 ## Server Commands (requires admin role)
 
     /pt setsaveintervalminutes [1-60] - Periodically store the prospecting data (on the server) every x minutes.
+    /pt setsharingallowed [true|false] - Allow/Disallow sharing of prospecting data
 
 ### Server Configuration
 
     SaveIntervalMinutes [1-60] - Periodically store the prospecting data every x minutes. Default: 5
+    SharingAllowed [true|false] - Allow/Disallow sharing of prospecting data. Default: true
 
 ## Usage
 

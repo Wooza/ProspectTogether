@@ -6,5 +6,7 @@ namespace ProspectTogether.Server
     {
         public override string ModCode => "ProspectTogetherServer";
 
+        public bool SharingAllowed { get; set; } = true;
+
     }
 }
