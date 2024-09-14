@@ -39,14 +39,14 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
 
 ## Client Commands
 
-    .pt showborder [true,false] - Show or hide the border around chunks. Toggles without argument.
+    .pt showborder [true|false] - Show or hide the border around chunks. Toggles without argument.
     .pt setcolor (overlay|border|zeroheat|lowheat|highheat) [0-255] [0-255] [0-255] [0-255] - Sets the color of the respective element.
     .pt setborderthickness [1-5] - Sets the border thickness. 
     .pt mode [0-1] - Sets the map mode. Supported modes: 0 (Default) and 1 (Heatmap)
     .pt heatmapore [oreName] - Changes the heatmap mode to display a specific ore.
         No argument resets the heatmap back to all ores. Can only handle the ore name in your selected language or the ore tag.
         Examples: game:ore-emerald, game:ore-bituminouscoal, Cassiterite.
-    .pt autoshare [true,false] - Set automatic sharing of prospecting data.
+    .pt autoshare [true|false] - Set automatic sharing of prospecting data.
     .pt setsaveintervalminutes [1-60] - Periodically store the prospecting data (on the client) every x minutes.
     .pt sendall - Send all your existing prospecting information to the server. You usually only have to run this command once per server.
 
@@ -58,11 +58,11 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
     LowHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative density. Default: 85 85 181 128
     HighHeatColor [0-255] [0-255] [0-255] [0-255] - Heatmap color for low relative density. Default: 168 34 36 128
     BorderThickness [1-5] - The thickness, in pixels, of the border color. Default: 1
-    RenderBorder [true,false] - Whether or not to render the border at all. Default: true
+    RenderBorder [true|false] - Whether or not to render the border at all. Default: true
     HeatMapOre [oreName] - The ore selected for the heatmap.
     MapMode [0-1] - The mode of the map.
     SaveIntervalMinutes [1-60] - Periodically store the prospecting data every x minutes. Default: 5
-    AutoShare [true,false] - Share prospecting data with configured players on the server. Default: false
+    AutoShare [true|false] - Share prospecting data with configured players on the server. Default: false
     ShareGroupUid [int] - Group Uid to which your data is sent. Use -1 for all players. Default: -1
 
 ## Server Commands (requires admin role)

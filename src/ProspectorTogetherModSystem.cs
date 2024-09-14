@@ -230,8 +230,11 @@ namespace ProspectTogether
 
         public override void Start(ICoreAPI api)
         {
-            var prospectTogetherPatches = new Harmony("ProspectTogether.patches");
-            prospectTogetherPatches.PatchAll(Assembly.GetExecutingAssembly());
+            if (api.Side == EnumAppSide.Server)
+            {
+                var prospectTogetherPatches = new Harmony("ProspectTogether.patches");
+                prospectTogetherPatches.PatchAll(Assembly.GetExecutingAssembly());
+            }
         }
 
     }

@@ -40,7 +40,7 @@ namespace ProspectTogether.Client
                 ClientApi.ChatCommands.Create("pt")
                     .WithDescription("ProspectorTogether main command.")
                     .BeginSubCommand("showborder")
-                        .WithDescription(".pt showborder [bool] - Shows or hides the tile border. No argument toggles instead.<br/>" +
+                        .WithDescription(".pt showborder [true|false] - Shows or hides the tile border. No argument toggles instead.<br/>" +
                                          "Sets the \"RenderBorder\" config option (default = true)")
                         .WithArgs(api.ChatCommands.Parsers.OptionalBool("show"))
                         .HandleWith(OnShowBorderCommand)
@@ -80,7 +80,7 @@ namespace ProspectTogether.Client
                         .HandleWith(OnHeatmapOreCommand)
                     .EndSubCommand()
                     .BeginSubCommand("autoshare")
-                        .WithDescription(".pt autoshare [bool] - Automatically share prospecting data")
+                        .WithDescription(".pt autoshare [true|false] - Automatically share prospecting data")
                         .WithArgs(api.ChatCommands.Parsers.OptionalBool("autoshare"))
                         .HandleWith(OnSetAutoShare)
                     .EndSubCommand()
@@ -210,9 +210,6 @@ namespace ProspectTogether.Client
             Storage.SendAll();
             return TextCommandResult.Success($"Sent all prospecting data to server.");
         }
-
-        private bool ProspectingPickInHand => ClientApi?.World?.Player?.InventoryManager?.ActiveHotbarSlot?.Itemstack?.Item?.Code?
-                .FirstPathPart()?.ToLower().StartsWith("prospectingpick") ?? false;
 
         public override string LayerGroupCode => "prospect-together";
 
