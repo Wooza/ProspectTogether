@@ -3,9 +3,7 @@
     "comment_version": "Mod Version: v1.0.0-rc.3",
     "comment_author": "Translated By: Macoto Hino",
     "comment_technical_details": "Machine translation using PCOT and DeepL.",
-
-	"dialog-show-overlay": "オーバーレイ表示",
-	"dialog-map-mode-default": "デフォルト",
-	"dialog-map-mode-heatmap": "ヒートマップ",
-	"dialog-auto-share": "自動共有"
+    "dialog-map-mode-default": "デフォルト",
+    "dialog-map-mode-heatmap": "ヒートマップ",
+    "dialog-auto-share": "自動共有"
 }

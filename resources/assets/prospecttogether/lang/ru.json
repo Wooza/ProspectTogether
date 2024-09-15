@@ -3,7 +3,5 @@
 	"dialog-auto-share": "Авто обмен",
 	"dialog-map-mode-default": "По умолчанию",
 	"dialog-map-mode-heatmap": "Тепловая карта",
-	"dialog-send-all-now": "Отправить всем сейчас",
-	"dialog-show-overlay": "Показать оверлей",
-	"hotkey-toggle-gui": "Показать/скрыть диалоговое окно ProspectTogether"
+	"dialog-send-all-now": "Отправить всем сейчас"
 }
