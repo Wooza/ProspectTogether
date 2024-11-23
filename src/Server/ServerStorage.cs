@@ -15,7 +15,7 @@ namespace ProspectTogether.Server
 
         private IServerNetworkChannel ServerChannel;
 
-        // Group id to to chunk to prospecting data
+        // Group id to chunk to prospecting data
         public Dictionary<int, Dictionary<ChunkCoordinate, ProspectInfo>> Data = new();
 
         public ServerStorage(ICoreServerAPI api, ServerModConfig config, string fileName) : base(api, config, fileName)

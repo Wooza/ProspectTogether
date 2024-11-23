@@ -1,31 +1,30 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using ProspectTogether.Shared;
 using System.Collections.Generic;
 using System.Reflection;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace ProspectTogether.Server
 {
-    [HarmonyPatch(typeof(ItemProspectingPick), "PrintProbeResults")]
-    class PrintProbeResultsPatch
+    [HarmonyPatch(typeof(ModSystemOreMap), "DidProbe")]
+    class ModSystemOreMapPatch
     {
-        static void Postfix(ItemProspectingPick __instance, IWorldAccessor world, IServerPlayer splr, ItemSlot itemslot, BlockPos pos)
+        static void Postfix(ModSystemOreMap __instance, PropickReading results, IServerPlayer splr)
         {
-            if (world.Side != EnumAppSide.Server)
-                return;
-
-            // Some reflection to get access to some protected stuff
-            ProPickWorkSpace ppws = (ProPickWorkSpace)typeof(ItemProspectingPick).GetField("ppws", BindingFlags.NonPublic |
+            ICoreAPI api = (ICoreAPI)typeof(ModSystemOreMap).GetField("api", BindingFlags.NonPublic |
                      BindingFlags.Instance).GetValue(__instance);
-            MethodInfo GenProbeResultsMethod = typeof(ItemProspectingPick).GetMethod("GenProbeResults", BindingFlags.NonPublic |
-                     BindingFlags.Instance);
 
-            PropickReading results = (PropickReading)GenProbeResultsMethod.Invoke(__instance, new object[] { world, pos });
-            if (results == null)
+            // Obtain proPickWorkSpace to get page codes
+            ProPickWorkSpace proPickWorkSpace = ObjectCacheUtil.TryGet<ProPickWorkSpace>(api, "propickworkspace");
+
+            if (proPickWorkSpace is null)
             {
+                // We can't do much without it.
+                api.World.Logger.Error("propickworkspace is null");
                 return;
             }
 
@@ -33,7 +32,7 @@ namespace ProspectTogether.Server
             var occurences = new List<OreOccurence>();
             foreach (var reading in results.OreReadings)
             {
-                string pageCode = ppws.pageCodes[reading.Key];
+                string pageCode = proPickWorkSpace.pageCodes[reading.Key];
                 if (reading.Value.TotalFactor > 0.025)
                 {
                     // +2 to offset for our Enum
@@ -45,11 +44,12 @@ namespace ProspectTogether.Server
                 }
             }
 
+            var pos = results.Position;
+
             // Send information to Player 
-            ProspectTogetherModSystem mod = world.Api.ModLoader.GetModSystem<ProspectTogetherModSystem>();
-            IBlockAccessor blockAccess = world.BlockAccessor;
-            int chunksize = blockAccess.ChunkSize;
-            ProspectInfo info = new(new ChunkCoordinate(pos.X / chunksize, pos.Z / chunksize), occurences);
+            ProspectTogetherModSystem mod = api.ModLoader.GetModSystem<ProspectTogetherModSystem>();
+            int chunksize = api.World.BlockAccessor.ChunkSize;
+            ProspectInfo info = new(new ChunkCoordinate(pos.XInt / chunksize, pos.ZInt / chunksize), occurences);
             mod.ServerStorage.UserProspected(info, splr);
         }
     }
