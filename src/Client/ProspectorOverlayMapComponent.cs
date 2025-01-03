@@ -1,6 +1,7 @@
 ﻿using ProspectTogether.Shared;
 using System.Text;
 using Vintagestory.API.Client;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
@@ -21,7 +22,7 @@ namespace ProspectTogether.Client
         {
             _chunkCoordinates = coords;
             _message = message;
-            _chunksize = clientApi.World.BlockAccessor.ChunkSize;
+            _chunksize = GlobalConstants.ChunkSize;
             worldPos = new Vec3d(coords.X * _chunksize, 0, coords.Z * _chunksize);
             this.colorTexture = colorTexture;
         }

@@ -2,11 +2,17 @@
   "type": "code",
   "modid": "prospecttogether",
   "name": "ProspectTogether",
-  "author": "Wooza",
+  "authors": [
+    "Wooza"
+  ],
+  "contributors": [
+    "P3t3rix"
+  ],
   "side": "Universal",
   "description": "Stores and displays prospecting data on the map and allows sharing data between players. Based on ProspectoInfo by P3t3rix.",
   "version": "1.4.0",
   "dependencies": {
     "game": "1.19.8"
-  }
+  },
+  "requiredOnServer": false
 }

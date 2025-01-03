@@ -5,25 +5,7 @@ namespace ProspectTogether.Shared
 {
 
     /// <summary>
-    /// S -> C. Sent when the player did some prospecting.
-    /// </summary>
-    [ProtoContract(ImplicitFields = ImplicitFields.None)]
-    public class PlayerProspectedPacket
-    {
-
-        [ProtoMember(1)]
-        public ProspectInfo Data;
-
-        public PlayerProspectedPacket() { }
-
-        public PlayerProspectedPacket(ProspectInfo data)
-        {
-            Data = data;
-        }
-    }
-
-    /// <summary>
-    /// C -> S. Player shares his prospecting data for a certain group.
+    /// Client -> Server. Player shares his prospecting data for a certain group.
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public class PlayerSharesProspectingPacket
@@ -45,7 +27,7 @@ namespace ProspectTogether.Shared
     }
 
     /// <summary>
-    /// S -> C. Server broadcasts prospecting data within a group.
+    /// Server -> Client. Server broadcasts prospecting data within a group.
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public class ServerBroadcastsProspectingPacket
@@ -63,7 +45,7 @@ namespace ProspectTogether.Shared
     }
 
     /// <summary>
-    /// C -> S. The client sends this to the server to ask for all prospecting data of a certain group.
+    /// Client -> Server. The client sends this to the server to ask for all prospecting data of a certain group.
     /// </summary>
     [ProtoContract(ImplicitFields = ImplicitFields.None)]
     public class PlayerRequestsInfoForGroupPacket

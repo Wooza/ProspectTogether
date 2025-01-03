@@ -1,10 +1,10 @@
-﻿using HarmonyLib;
-using ProspectTogether.Shared;
+﻿using ProspectTogether.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
@@ -27,7 +27,7 @@ namespace ProspectTogether.Client
         public ProspectorOverlayLayer(ICoreAPI api, IWorldMapManager mapSink) : base(api, mapSink)
         {
             WorldMapManager = mapSink;
-            Chunksize = api.World.BlockAccessor.ChunkSize;
+            Chunksize = GlobalConstants.ChunkSize;
 
             var modSystem = api.ModLoader.GetModSystem<ProspectTogetherModSystem>();
             Config = modSystem.ClientConfig;
