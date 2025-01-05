@@ -28,13 +28,15 @@ namespace ProspectTogether.Client
         {
             LoadProspectingDataFile();
             Api.Event.LeaveWorld += SaveProspectingDataFile;
+
+            /* Registering this channel when the mod is not installed on the server generates a warning.
+             * But this seems to be the only way to test, if the mod is installed on the server.
+             */
             ClientChannel = Api.Network.RegisterChannel(ChannelName)
-                .RegisterMessageType<PlayerProspectedPacket>()
                 .RegisterMessageType<PlayerSharesProspectingPacket>()
                 .RegisterMessageType<ServerBroadcastsProspectingPacket>()
                 .RegisterMessageType<PlayerRequestsInfoForGroupPacket>()
-                .SetMessageHandler<ServerBroadcastsProspectingPacket>(OnServerBroadcastsProspecting)
-                .SetMessageHandler<PlayerProspectedPacket>(OnPlayerProspected);
+                .SetMessageHandler<ServerBroadcastsProspectingPacket>(OnServerBroadcastsProspecting);
             ConfigureSaveListener();
 
             Api.Event.PlayerJoin += p =>
@@ -47,8 +49,18 @@ namespace ProspectTogether.Client
 
         }
 
+        public bool IsModRunningOnServer()
+        {
+            return ClientChannel != null && ClientChannel.Connected;
+        }
+
         public void RequestInfo()
         {
+            if (!IsModRunningOnServer())
+            {
+                return;
+            }
+
             if (Config.AutoShare)
             {
                 ClientChannel.SendPacket(new PlayerRequestsInfoForGroupPacket(Constants.ALL_GROUP_ID));
@@ -56,22 +68,28 @@ namespace ProspectTogether.Client
             }
         }
 
-        private void OnPlayerProspected(PlayerProspectedPacket packet)
+        public void PlayerProspected(ProspectInfo info)
         {
             lock (Lock)
             {
-                Data[packet.Data.Chunk] = packet.Data;
-                foreach (OreOccurence ore in packet.Data.Values)
+                Data[info.Chunk] = info;
+                foreach (OreOccurence ore in info.Values)
                 {
                     FoundOreNames.Add(ore.Name);
                 }
                 HasChangedSinceLastSave = true;
-                OnChanged?.Invoke(new List<ProspectInfo>() { packet.Data });
+                OnChanged?.Invoke(new List<ProspectInfo>() { info });
             }
+
+            if (!IsModRunningOnServer())
+            {
+                return;
+            }
+
             if (Config.AutoShare)
             {
                 // It's our prospecting data and we want to share it.
-                ClientChannel.SendPacket(new PlayerSharesProspectingPacket(new List<ProspectInfo>() { packet.Data }, Config.ShareGroupUid));
+                ClientChannel.SendPacket(new PlayerSharesProspectingPacket(new List<ProspectInfo>() { info }, Config.ShareGroupUid));
             }
         }
 
@@ -99,6 +117,12 @@ namespace ProspectTogether.Client
 
         public void SendAll()
         {
+            if (!IsModRunningOnServer())
+            {
+                Api.ShowChatMessage("The mod is not installed on the server, thus you cannot share your data.");
+                return;
+            }
+
             lock (Lock)
             {
                 ClientChannel.SendPacket(new PlayerSharesProspectingPacket(Data.Values.ToList(), Config.ShareGroupUid));

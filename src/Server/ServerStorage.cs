@@ -29,18 +29,11 @@ namespace ProspectTogether.Server
             ConfigureSaveListener();
 
             ServerChannel = Api.Network.RegisterChannel(ChannelName)
-                .RegisterMessageType<PlayerProspectedPacket>()
                 .RegisterMessageType<PlayerSharesProspectingPacket>()
                 .RegisterMessageType<ServerBroadcastsProspectingPacket>()
                 .RegisterMessageType<PlayerRequestsInfoForGroupPacket>()
                 .SetMessageHandler<PlayerSharesProspectingPacket>(PlayerSharedProspectingData)
                 .SetMessageHandler<PlayerRequestsInfoForGroupPacket>(PlayerRequestsInfoForGroup);
-        }
-        public virtual void UserProspected(ProspectInfo newData, IServerPlayer byPlayer)
-        {
-
-            var packet = new PlayerProspectedPacket(newData);
-            ServerChannel.SendPacket(packet, byPlayer);
         }
 
         public virtual void PlayerSharedProspectingData(IServerPlayer fromPlayer, PlayerSharesProspectingPacket packet)
@@ -117,7 +110,7 @@ namespace ProspectTogether.Server
             ServerChannel.SendPacket(broadCastPacket, fromPlayer);
         }
 
-        private bool IsValidGroup(int groupId, IServerPlayer player)
+        private static bool IsValidGroup(int groupId, IServerPlayer player)
         {
             return groupId == Constants.ALL_GROUP_ID || player.GetGroup(groupId) != null;
         }

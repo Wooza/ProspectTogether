@@ -2,7 +2,7 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch Client (.NET)",
+			"name": "Launch SinglePlayer",
 			"type": "coreclr",
 			"request": "launch",
 			"preLaunchTask": "Build (Debug)",
@@ -13,11 +13,105 @@
 				"--openWorld",
 				"Strip World",
 				"--addModPath",
-				"${workspaceFolder}/bin/Debug/Mods"
+				"${workspaceFolder}/bin/Debug/Mods",
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDev"
 			],
 			"console": "internalConsole",
 			"internalConsoleOptions": "openOnSessionStart",
 			"justMyCode": false,
-		}
+		},
+		{
+			"name": "Launch Multiplayer Server (with Mod) + Client",
+			"type": "coreclr",
+			"checkForDevCert": false,
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/VintagestoryServer.exe",
+			"args": [
+				"--addModPath",
+				"${workspaceFolder}/bin/Debug/Mods",
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDevServer"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"serverReadyAction": {
+				"pattern": "Dedicated Server now running on Port ([0-9]+)",
+				"action": "startDebugging",
+				"name": "Launch Multiplayer Client"
+			},
+			"justMyCode": false
+		},
+		{
+			"name": "Launch Multiplayer Server (with Mod)",
+			"type": "coreclr",
+			"checkForDevCert": false,
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/VintagestoryServer.exe",
+			"args": [
+				"--addModPath",
+				"${workspaceFolder}/bin/Debug/Mods",
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDevServer"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"justMyCode": false
+		},
+		{
+			"name": "Launch Multiplayer Server (without Mod)",
+			"type": "coreclr",
+			"checkForDevCert": false,
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/VintagestoryServer.exe",
+			"args": [
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDevServer"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"justMyCode": false
+		},
+		{
+			"name": "Launch Multiplayer Server (without Mod) + Client",
+			"type": "coreclr",
+			"checkForDevCert": false,
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/VintagestoryServer.exe",
+			"args": [
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDevServer"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"serverReadyAction": {
+				"pattern": "Dedicated Server now running on Port ([0-9]+)",
+				"action": "startDebugging",
+				"name": "Launch Multiplayer Client",
+			},
+			"justMyCode": false
+		},
+		{
+			"name": "Launch Multiplayer Client",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/Vintagestory.exe",
+			"args": [
+				"--connect",
+				"localhost:42420",
+				"--addModPath",
+				"${workspaceFolder}/bin/Debug/Mods",
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDev"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"justMyCode": false,
+		},
 	]
 }
