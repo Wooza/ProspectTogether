@@ -10,17 +10,20 @@ namespace ProspectTogether.Client
 {
     public class ProspectTogetherSettingsDialog
     {
+        private const string ID_SWITCH_AUTOSHARE = "autoShare";
+        private const string ID_DROPDOWN_GROUP = "group";
+        private const string ID_BUTTON_SENDALL = "sendAll";
         private readonly ClientModConfig Config;
 
         // Callback to update the map
         private readonly Action<bool> RebuildMap;
 
         // Ores that are displayed in the ore selection
-        private List<KeyValuePair<string, string>> Ores;
+        private readonly List<KeyValuePair<string, string>> Ores;
         private readonly int NumFixedOreEntries;
 
         // Groups that are displayed in the group selection
-        private List<KeyValuePair<string, string>> Groups;
+        private readonly List<KeyValuePair<string, string>> Groups;
         private readonly int NumFixedGroupEntries;
         private readonly ClientStorage Storage;
 
@@ -138,14 +141,20 @@ namespace ProspectTogether.Client
                  // Ore selection
                  .AddDropDown(Ores.Select((pair) => pair.Value).ToArray(), Ores.Select((pair) => pair.Key).ToArray(), currentHeatmapOreIndex, OnHeatmapOreSelected, oreBounds)
                  .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
-                 .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, "autoShareSwitch")
+                 .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, ID_SWITCH_AUTOSHARE)
                  // Group selection
-                 .AddDropDown(Groups.Select(p => p.Value).ToArray(), Groups.Select(p => p.Key).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds)
-                 .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small)
+                 .AddDropDown(Groups.Select(p => p.Value).ToArray(), Groups.Select(p => p.Key).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds, ID_DROPDOWN_GROUP)
+                 .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small, ID_BUTTON_SENDALL)
                  .Compose();
 
-            composer.GetSwitch("autoShareSwitch").On = Config.AutoShare;
+            composer.GetSwitch(ID_SWITCH_AUTOSHARE).On = Config.AutoShare;
             composer.Enabled = false;
+
+            // Disable if mod is not running on server
+            composer.GetSwitch(ID_SWITCH_AUTOSHARE).Enabled = Storage.IsModRunningOnServer();
+            composer.GetDropDown(ID_DROPDOWN_GROUP).Enabled = Storage.IsModRunningOnServer();
+            composer.GetButton(ID_BUTTON_SENDALL).Enabled = Storage.IsModRunningOnServer();
+
             guiDialogWorldMap.Composers[key] = composer;
         }
 

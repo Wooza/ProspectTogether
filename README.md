@@ -2,8 +2,8 @@
 
 This is a fork of the awesome ProspectorInfo mod from P3t3rix (https://github.com/p3t3rix-vsmods/VsProspectorInfo).
 ProspectTogether aims to make it easy to store, analyse and share your prospecting data.
-You can also use this mod in single player.
-The only downside compared to ProspectorInfo is that this mod also needs to be installed on the server.
+You can also use this mod in single player and client-side only.
+If you want to share prospecting data, this mod must be installed on the server as well.
 
 ## Quick Guide
 * Drop the zip file into your `Mods` folder or use 1-click install from VSModDB.
@@ -11,6 +11,16 @@ The only downside compared to ProspectorInfo is that this mod also needs to be i
 * The data of each prospected chunk is shown on the map, when the ProspectTogether map layer is enabled.
 * Use the heatmap setting and select an ore to see where certain ores are more likely to occur.
 * Configure autosharing if you want to share your data with the whole server or a certain group.
+
+## Known issues
+* The prospecting data is only captured if the map or mini-map is used, i.e., if the dot from the vanilla prospecting appears, than the information is also stored in this mod.
+
+## Changelog
+# 2.0.0
+* ProspectTogether can now be used client-side only. Sharing still requires mod installation on the server.
+
+# Older versions
+* See release notes of that version.
 
 
 ## Migration from ProspectorInfo
@@ -115,3 +125,5 @@ To compile the mod you also need to set 2 environment variables:
 ## Create a release
 To create a release just compile the solution in Release configuration. A folder named "release" should appear in the solution directory.
 This can then be zipped to be uploaded to the mod-db.
+
+I'm lazy, so the github pipeline produces a zip file on each commit, which can be used directly.

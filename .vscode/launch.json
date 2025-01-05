@@ -44,6 +44,38 @@
 			"justMyCode": false
 		},
 		{
+			"name": "Launch Multiplayer Server (with Mod)",
+			"type": "coreclr",
+			"checkForDevCert": false,
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/VintagestoryServer.exe",
+			"args": [
+				"--addModPath",
+				"${workspaceFolder}/bin/Debug/Mods",
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDevServer"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"justMyCode": false
+		},
+		{
+			"name": "Launch Multiplayer Server (without Mod)",
+			"type": "coreclr",
+			"checkForDevCert": false,
+			"request": "launch",
+			"preLaunchTask": "Build (Debug)",
+			"program": "${env:VINTAGE_STORY}/VintagestoryServer.exe",
+			"args": [
+				"--dataPath",
+				"${env:VINTAGE_STORY_DATA}/ProspectTogetherDevServer"
+			],
+			"console": "internalConsole",
+			"internalConsoleOptions": "openOnSessionStart",
+			"justMyCode": false
+		},
+		{
 			"name": "Launch Multiplayer Server (without Mod) + Client",
 			"type": "coreclr",
 			"checkForDevCert": false,

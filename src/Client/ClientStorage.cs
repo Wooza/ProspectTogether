@@ -29,6 +29,9 @@ namespace ProspectTogether.Client
             LoadProspectingDataFile();
             Api.Event.LeaveWorld += SaveProspectingDataFile;
 
+            /* Registering this channel when the mod is not installed on the server generates a warning.
+             * But this seems to be the only way to test, if the mod is installed on the server.
+             */
             ClientChannel = Api.Network.RegisterChannel(ChannelName)
                 .RegisterMessageType<PlayerSharesProspectingPacket>()
                 .RegisterMessageType<ServerBroadcastsProspectingPacket>()
@@ -46,10 +49,8 @@ namespace ProspectTogether.Client
 
         }
 
-        private bool IsModRunningOnServer()
+        public bool IsModRunningOnServer()
         {
-            // This logs an error when the mod is missing on the server side
-            // But checking Api.Network.GetChannelState(ChannelName) returns Connected, even if the Mod is not running on the server ?!
             return ClientChannel != null && ClientChannel.Connected;
         }
 
@@ -118,6 +119,7 @@ namespace ProspectTogether.Client
         {
             if (!IsModRunningOnServer())
             {
+                Api.ShowChatMessage("The mod is not installed on the server, thus you cannot share your data.");
                 return;
             }
 
