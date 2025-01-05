@@ -16,11 +16,10 @@ If you want to share prospecting data, this mod must be installed on the server 
 * The prospecting data is only captured if the map or mini-map is used, i.e., if the dot from the vanilla prospecting appears, than the information is also stored in this mod.
 
 ## Changelog
-# 2.0.0
-* ProspectTogether can now be used client-side only. Sharing still requires mod installation on the server.
-
-# Older versions
-* See release notes of that version.
+* 2.0.0
+    * ProspectTogether can now be used client-side only. Sharing still requires mod installation on the server.
+* Older versions
+    * See release notes of that version.
 
 
 ## Migration from ProspectorInfo
