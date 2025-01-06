@@ -1,6 +1,6 @@
 # ProspectTogether
 
-This is a fork of the awesome ProspectorInfo mod from P3t3rix ([https://github.com/p3t3rix-vsmods/VsProspectorInfo](https://mods.vintagestory.at/show/mod/1235)).
+This is a fork of the awesome ProspectorInfo mod from P3t3rix ([https://mods.vintagestory.at/show/mod/1235](https://mods.vintagestory.at/show/mod/1235)).
 ProspectTogether aims to make it easy to store, analyse and share your prospecting data.
 You can also use this mod in single player and client-side only.
 If you want to share prospecting data, this mod must be installed on the server as well.
