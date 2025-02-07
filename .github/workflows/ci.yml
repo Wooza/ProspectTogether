@@ -17,7 +17,9 @@ jobs:
 
     - name: Setup Build Dependencies
       run: |
-        $vs_version = $(Get-Content .\resources\modinfo.json | jq -r .dependencies.game)
+        # Hardcode game version used for build
+        # $vs_version = $(Get-Content .\resources\modinfo.json | jq -r .dependencies.game)
+        $vs_version = '1.20.3'
         $filename = "vs_server_linux-x64_${vs_version}.tar.gz"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
