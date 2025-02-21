@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -36,6 +35,7 @@ namespace ProspectTogether
         public ServerModConfig ServerConfig;
         public ServerStorage ServerStorage;
         public ICoreServerAPI ServerApi;
+        private Harmony harmony;
 
         public override void StartClientSide(ICoreClientAPI api)
         {
@@ -232,9 +232,17 @@ namespace ProspectTogether
         {
             if (api.Side == EnumAppSide.Client)
             {
-                var prospectTogetherPatches = new Harmony("ProspectTogether.patches");
-                prospectTogetherPatches.PatchAll(Assembly.GetExecutingAssembly());
+                if (!Harmony.HasAnyPatches(Mod.Info.ModID))
+                {
+                    harmony = new Harmony(Mod.Info.ModID);
+                    harmony.PatchAll();
+                }
             }
+        }
+
+        public override void Dispose()
+        {
+            harmony?.UnpatchAll(Mod.Info.ModID);
         }
 
     }

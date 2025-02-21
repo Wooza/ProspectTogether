@@ -10,10 +10,13 @@ using Vintagestory.GameContent;
 
 namespace ProspectTogether.Client
 {
-    [HarmonyPatch(typeof(OreMapLayer), "OnDataFromServer")]
+    [HarmonyPatch]
     class OreMapLayerPatch
     {
-        static void Postfix(OreMapLayer __instance, byte[] data)
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(OreMapLayer), nameof(OreMapLayer.OnDataFromServer))]
+        static void OnDataFromServer(OreMapLayer __instance, byte[] data)
         {
             ICoreClientAPI capi = (ICoreClientAPI)typeof(OreMapLayer).GetField("capi", BindingFlags.NonPublic |
                      BindingFlags.Instance).GetValue(__instance);
