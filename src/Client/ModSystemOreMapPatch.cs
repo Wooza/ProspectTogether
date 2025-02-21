@@ -28,6 +28,13 @@ namespace ProspectTogether.Client
                 return;
             }
 
+            ProspectTogetherModSystem mod = capi.ModLoader.GetModSystem<ProspectTogetherModSystem>();
+            if (mod is null)
+            {
+                // Mod not loaded?
+                return;
+            }
+
             List<PropickReading> results = SerializerUtil.Deserialize<List<PropickReading>>(data);
 
             foreach (var result in results)
@@ -56,7 +63,6 @@ namespace ProspectTogether.Client
                 var pos = result.Position;
 
                 // Send data to mod
-                ProspectTogetherModSystem mod = capi.ModLoader.GetModSystem<ProspectTogetherModSystem>();
                 int chunksize = GlobalConstants.ChunkSize;
                 ProspectInfo info = new(new ChunkCoordinate(pos.XInt / chunksize, pos.ZInt / chunksize), occurences);
                 mod.ClientStorage.PlayerProspected(info);
