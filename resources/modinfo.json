@@ -10,6 +10,6 @@
   ],
   "side": "Universal",
   "description": "Stores and displays prospecting data on the map and allows sharing data between players. Based on ProspectoInfo by P3t3rix.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "requiredOnServer": false
 }
