@@ -235,7 +235,15 @@ namespace ProspectTogether
                 if (!Harmony.HasAnyPatches(Mod.Info.ModID))
                 {
                     harmony = new Harmony(Mod.Info.ModID);
-                    harmony.PatchAll();
+                    try
+                    {
+                        harmony.PatchAll();
+                    }
+                    catch (HarmonyException ex)
+                    {
+                        api.Logger.Log(EnumLogType.Warning, "Failed to patch OreMapLayer: " + ex.ToString());
+                        api.Logger.Log(EnumLogType.Warning, "The mod will not work properly.");
+                    }
                 }
             }
         }
