@@ -92,18 +92,18 @@ namespace ProspectTogether.Client
             // Auto-sized dialog at the center of the screen
             ElementBounds dialogBounds = ElementStdBounds.AutosizedMainDialog.WithAlignment(EnumDialogArea.RightMiddle);
             ElementBounds backgroundBounds = ElementBounds.Fill.WithFixedPadding(GuiStyle.ElementToDialogPadding);
-            ElementBounds dialogContainerBounds = ElementBounds.Fixed(0, 40, 200, 220);
+            ElementBounds dialogContainerBounds = ElementBounds.Fixed(0, 40, 200, 170);
             backgroundBounds.BothSizing = ElementSizing.FitToChildren;
             backgroundBounds.WithChildren(dialogContainerBounds);
 
-            ElementBounds showOverlayTextBounds = ElementBounds.Fixed(35, 55, 160, 40);
-            ElementBounds switchBounds = ElementBounds.Fixed(170, 50);
-            ElementBounds mapModeBounds = ElementBounds.Fixed(35, 90, 160, 20);
-            ElementBounds oreBounds = ElementBounds.Fixed(35, 130, 160, 20);
-            ElementBounds autoShareTextBounds = ElementBounds.Fixed(35, 165, 160, 40);
-            ElementBounds autoShareSwitchBounds = ElementBounds.Fixed(170, 160);
-            ElementBounds shareGroupBounds = ElementBounds.Fixed(35, 205, 160, 20);
-            ElementBounds sendAllBounds = ElementBounds.Fixed(35, 240, 160, 20);
+            double width = 200;
+            double x = 20;
+            ElementBounds mapModeBounds = ElementBounds.Fixed(x, 45, width, 30);
+            ElementBounds oreBounds = ElementBounds.Fixed(x, mapModeBounds.fixedY + 40, width, 30);
+            ElementBounds autoShareSwitchBounds = ElementBounds.Fixed((int)x, (int)(oreBounds.fixedY + 40));
+            ElementBounds autoShareTextBounds = ElementBounds.Fixed(60, oreBounds.fixedY + 45, width - 60, 40);
+            ElementBounds shareGroupBounds = ElementBounds.Fixed(x, autoShareSwitchBounds.fixedY + 40, width, 30);
+            ElementBounds sendAllBounds = ElementBounds.Fixed(x, shareGroupBounds.fixedY + 40, width, 30);
 
             var currentHeatmapOreIndex = 0;
             if (Config.HeatMapOre != null)
@@ -140,11 +140,11 @@ namespace ProspectTogether.Client
                  .AddDropDown(new string[] { "0", "1" }, new string[] { ModLang.Get("dialog-map-mode-default"), ModLang.Get("dialog-map-mode-heatmap") }, (int)Config.MapMode, OnMapModeSelected, mapModeBounds)
                  // Ore selection
                  .AddDropDown(Ores.Select((pair) => pair.Value).ToArray(), Ores.Select((pair) => pair.Key).ToArray(), currentHeatmapOreIndex, OnHeatmapOreSelected, oreBounds)
-                 .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteDetailText(), autoShareTextBounds)
+                 .AddStaticText(ModLang.Get("dialog-auto-share"), CairoFont.WhiteSmallText(), autoShareTextBounds)
                  .AddSwitch(OnSwitchAutoShare, autoShareSwitchBounds, ID_SWITCH_AUTOSHARE)
                  // Group selection
                  .AddDropDown(Groups.Select(p => p.Value).ToArray(), Groups.Select(p => p.Key).ToArray(), currentGroupIndex, OnGroupChanged, shareGroupBounds, ID_DROPDOWN_GROUP)
-                 .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteDetailText(), EnumButtonStyle.Small, ID_BUTTON_SENDALL)
+                 .AddButton(ModLang.Get("dialog-send-all-now"), OnSendAll, sendAllBounds, CairoFont.WhiteSmallText().WithOrientation(EnumTextOrientation.Center), EnumButtonStyle.Small, ID_BUTTON_SENDALL)
                  .Compose();
 
             composer.GetSwitch(ID_SWITCH_AUTOSHARE).On = Config.AutoShare;
