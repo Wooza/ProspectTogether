@@ -1,6 +1,7 @@
 using HarmonyLib;
 using ProspectTogether.Shared;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
@@ -40,6 +41,8 @@ namespace ProspectTogether.Client
 
             List<PropickReading> results = SerializerUtil.Deserialize<List<PropickReading>>(data);
 
+            Dictionary<ChunkCoordinate, ProspectInfo> infos = new();
+
             foreach (var result in results)
             {
                 // Convert results to ProspectTogether format
@@ -65,11 +68,13 @@ namespace ProspectTogether.Client
 
                 var pos = result.Position;
 
-                // Send data to mod
                 int chunksize = GlobalConstants.ChunkSize;
-                ProspectInfo info = new(new ChunkCoordinate(pos.XInt / chunksize, pos.ZInt / chunksize), occurences);
-                mod.ClientStorage.PlayerProspected(info);
+                var coords = new ChunkCoordinate(pos.XInt / chunksize, pos.ZInt / chunksize);
+                ProspectInfo info = new(coords, occurences);
+                infos[coords] = info;
             }
+            // Send data to mod
+            mod.ClientStorage.PlayerProspected(infos.Values.ToList());
         }
     }
 }

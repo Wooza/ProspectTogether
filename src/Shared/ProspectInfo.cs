@@ -42,12 +42,13 @@ namespace ProspectTogether.Shared
         public ProspectInfo(ChunkCoordinate chunk, List<OreOccurence> values)
         {
             Chunk = chunk;
-            Values = values;
+            // Make sure inputs are sorted
+            Values = values.OrderBy(v => v.RelativeDensity).ThenBy(v => v.AbsoluteDensity).Reverse().ToList();
         }
 
         public bool Equals(ProspectInfo other)
         {
-            return Chunk.X == other.Chunk.X && Chunk.Z == other.Chunk.Z;
+            return Chunk.X == other.Chunk.X && Chunk.Z == other.Chunk.Z && Values.SequenceEqual(other.Values);
         }
 
         public override bool Equals(object obj)
@@ -69,9 +70,6 @@ namespace ProspectTogether.Shared
             {
 
                 StringBuilder sb = new();
-                // Restore sort order
-                Values = Values.OrderBy(v => v.RelativeDensity).ThenBy(v => v.AbsoluteDensity).Reverse().ToList();
-
                 if (Values.Count > 0)
                 {
                     sb.AppendLine(Lang.Get("propick-reading-title", Values.Count));

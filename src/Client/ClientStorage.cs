@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vintagestory.API.Client;
+using Vintagestory.API.Util;
 
 namespace ProspectTogether.Client
 {
@@ -68,17 +69,38 @@ namespace ProspectTogether.Client
             }
         }
 
-        public void PlayerProspected(ProspectInfo info)
+        public void PlayerProspected(List<ProspectInfo> infos)
         {
+            List<ProspectInfo> delta = new();
+
             lock (Lock)
             {
-                Data[info.Chunk] = info;
-                foreach (OreOccurence ore in info.Values)
+                foreach (ProspectInfo info in infos)
                 {
-                    FoundOreNames.Add(ore.Name);
+                    // Vanilla mechanism always shares all data, so we compute the delta to what we already have.
+                    if (Data.ContainsKey(info.Chunk))
+                    {
+                        // If we already have a value for the given chunk but the new reading is differnt we still need to update.
+                        var existing = Data.Get(info.Chunk);
+                        if (existing.Equals(info))
+                        {
+                            continue;
+                        }
+                    }
+
+                    delta.Add(info);
+                    Data[info.Chunk] = info;
+                    foreach (OreOccurence ore in info.Values)
+                    {
+                        FoundOreNames.Add(ore.Name);
+                    }
                 }
-                HasChangedSinceLastSave = true;
-                OnChanged?.Invoke(new List<ProspectInfo>() { info });
+
+                if (delta.Count > 0)
+                {
+                    HasChangedSinceLastSave = true;
+                    OnChanged?.Invoke(delta);
+                }
             }
 
             if (!IsModRunningOnServer())
@@ -89,7 +111,7 @@ namespace ProspectTogether.Client
             if (Config.AutoShare)
             {
                 // It's our prospecting data and we want to share it.
-                ClientChannel.SendPacket(new PlayerSharesProspectingPacket(new List<ProspectInfo>() { info }, Config.ShareGroupUid));
+                ClientChannel.SendPacket(new PlayerSharesProspectingPacket(delta, Config.ShareGroupUid));
             }
         }
 
