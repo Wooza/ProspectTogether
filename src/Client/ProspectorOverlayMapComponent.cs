@@ -46,6 +46,14 @@ namespace ProspectTogether.Client
         public override void Render(GuiElementMap map, float dt)
         {
             map.TranslateWorldPosToViewPos(worldPos, ref viewPos);
+            if (viewPos.X < -2 * _chunksize
+                || viewPos.Y < -2 * _chunksize
+                || viewPos.X > map.Bounds.OuterWidth + 2 * _chunksize
+                || viewPos.Y > map.Bounds.OuterHeight + 2 * _chunksize)
+            {
+                // Skip rendering if part is not in map bounds.
+                return;
+            }
 
             capi.Render.Render2DTexture(
                 colorTexture.TextureId,
