@@ -72,13 +72,8 @@ namespace ProspectTogether
                         .WithArgs(api.ChatCommands.Parsers.IntRange("interval", 1, 60))
                         .RequiresPrivilege(Privilege.root)
                         .HandleWith(OnSetSaveIntervalMinutes)
-                    .EndSubCommand()
-                    .BeginSubCommand("setsharingallowed")
-                        .WithDescription("/pt setsharingallowed [true|false] - Allow/Disallow sharing of prospecting data")
-                        .WithArgs(api.ChatCommands.Parsers.Bool("allowed"))
-                        .RequiresPrivilege(Privilege.root)
-                        .HandleWith(OnSetSharingAllowed)
                     .EndSubCommand();
+
         }
 
         private TextCommandResult OnSetSaveIntervalMinutes(TextCommandCallingArgs args)
@@ -87,13 +82,6 @@ namespace ProspectTogether
             ServerConfig.Save(ServerApi);
             ServerStorage.ConfigureSaveListener();
             return TextCommandResult.Success($"Set Server SaveIntervalMinutes to {ServerConfig.SaveIntervalMinutes}.");
-        }
-
-        private TextCommandResult OnSetSharingAllowed(TextCommandCallingArgs args)
-        {
-            ServerConfig.SharingAllowed = (bool)args.Parsers[0].GetValue();
-            ServerConfig.Save(ServerApi);
-            return TextCommandResult.Success($"Set SharingAllowed to {ServerConfig.SharingAllowed}.");
         }
 
         private static void MigrateClientDataFileFromProspectorInfo(ICoreClientAPI api)

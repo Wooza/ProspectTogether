@@ -38,16 +38,6 @@ namespace ProspectTogether.Server
 
         public virtual void PlayerSharedProspectingData(IServerPlayer fromPlayer, PlayerSharesProspectingPacket packet)
         {
-            if (!Config.SharingAllowed)
-            {
-                fromPlayer.SendMessage(GlobalConstants.GeneralChatGroup, "You tried to share prospecting data, but sharing is not allowed on this server.<br>" +
-                 "You may ask the server admin to enable it sharing via '/pt setsharingallowed true'<br>" +
-                 "To get rid of this message, disable auto sharing in the ProspectorTogether settings on the map", Vintagestory.API.Common.EnumChatType.Notification);
-                // Sharing is forbidden.
-                return;
-            }
-
-
             if (!IsValidGroup(packet.GroupId, fromPlayer))
             {
                 // Invalid
@@ -85,11 +75,6 @@ namespace ProspectTogether.Server
 
         private void PlayerRequestsInfoForGroup(IServerPlayer fromPlayer, PlayerRequestsInfoForGroupPacket packet)
         {
-            if (!Config.SharingAllowed)
-            {
-                return;
-            }
-
             if (!IsValidGroup(packet.GroupId, fromPlayer))
             {
                 return;
