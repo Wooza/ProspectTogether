@@ -1,4 +1,7 @@
 # Changelog
+* 2.1.0-rc.1
+    * Update to .NET 8
+    * Update game version to 1.21.0-rc.4
 * 2.0.7
     * Remove obsolete server option `SharingAllowed` and `/setsharingallowed`. Don't install the mod on the server if users should not be allowed share.
 * 2.0.6

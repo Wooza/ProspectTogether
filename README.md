@@ -13,7 +13,28 @@ If you want to share prospecting data, this mod must be installed on the server 
 * Configure autosharing if you want to share your data with the whole server or a certain group.
 
 ## Known issues
+* This mod displays the most recent prospecting reading per chunk. This is inaccurate, [because the readings are position-based and not chunk-based](https://wiki.vintagestory.at/Prospecting_Pick#Notes), however, readings within a chunk are usually close enough to each other that this does not matter much.
 * The prospecting data is only captured if the map or mini-map is used, i.e., if the dot from the vanilla prospecting appears, than the information is also stored in this mod.
+
+## Troubleshooting
+If you found a problem with the mod, feel free to report it. However, keep in mind that I'm maintaining this mod in my spare time, so don't expect me to immediately fix every bug.
+Please keep the following in mind, when reporting an error:
+- Describe the problem as precise as you can. This makes it a lot easier for me to reproduce and fix a bug. 
+  Ideally, you give me a step-by-step explanation on how to reproduce the bug.
+    - Bad:
+        - "Mod does not work!"
+        - "Mod crashes!"
+    - Good:
+        - "I just prospected a new chunk while playing in SinglePlayer. Then I tried clicking on xyz and nothing seems to happen. Game Version X.Y, Mod Version X.Y, OS: Windows/Linux. I found the following errors in the log file, which might be related: [Log file contents here]"
+- Check the log files for suspicious entries
+    - The game has several log files, though I'm not sure what ends up where, so make sure to skim over all of them.
+      You can find them in `C:\Users\YourUserName\AppData\Roaming\VintagestoryData\Logs`. 
+    - Note that the game creates new log files on each game start and archives the old entries 
+      so make sure you open the correct log files.
+    - It should be sufficient to use Ctrl+F to search for `ProspectTogether`.
+- Ideally you create an Issue on [Github](https://github.com/Wooza/ProspectTogether/issues).
+    - This requires a free account, but makes it easier for me to track different problems/questions, etc. instead having to follow individual comments on the Mod page.
+    - Posting on the Mod page is ok, but I might be slower to react to that.
 
 ## Changelog
 See [Changelog](CHANGELOG.md)
@@ -111,8 +132,12 @@ Heatmap for Cassiterite only (map mode 1; heatmapore Cassiterite)
 
 ## Compiling
 To compile the mod you also need to set 2 environment variables:
-- VINTAGE_STORY => the path to the game directory e.g. c:\games\vintagestory
-- VINTAGE_STORY_DATA => the path to the games data directory typically located somewhere in appdata e.g. C:\Users\MyUser\AppData\Roaming\VintagestoryData
+- `VINTAGE_STORY`: Path to the game
+- `VINTAGE_STORY_DATA` Path to the game data
+
+The following commands should work in cmd, unless you changed the installation directory:
+- `setx VINTAGE_STORY %APPDATA%\Vintagestory`
+- `setx VINTAGE_STORY %APPDATA%\VintagestoryData`
 
 ## Create a release
 1. Update version in `modinfo.json` according to [SemVer](https://semver.org/)
