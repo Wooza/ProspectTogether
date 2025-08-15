@@ -16,11 +16,7 @@ If you want to share prospecting data, this mod must be installed on the server 
 * The prospecting data is only captured if the map or mini-map is used, i.e., if the dot from the vanilla prospecting appears, than the information is also stored in this mod.
 
 ## Changelog
-* 2.0.0
-    * ProspectTogether can now be used client-side only. Sharing still requires mod installation on the server.
-* Older versions
-    * See release notes of that version.
-
+See [Changelog](CHANGELOG.md)
 
 ## Migration from ProspectorInfo
 
@@ -77,12 +73,10 @@ If autosharing is disabled, you will neither send nor receive any prospecting da
 ## Server Commands (requires admin role)
 
     /pt setsaveintervalminutes [1-60] - Periodically store the prospecting data (on the server) every x minutes.
-    /pt setsharingallowed [true|false] - Allow/Disallow sharing of prospecting data
 
 ### Server Configuration
 
     SaveIntervalMinutes [1-60] - Periodically store the prospecting data every x minutes. Default: 5
-    SharingAllowed [true|false] - Allow/Disallow sharing of prospecting data. Default: true
 
 ## Usage
 
@@ -116,13 +110,15 @@ Heatmap for Cassiterite only (map mode 1; heatmapore Cassiterite)
 
 
 ## Compiling
-Clone the repository with submodules included: "git clone --recursive"
 To compile the mod you also need to set 2 environment variables:
 - VINTAGE_STORY => the path to the game directory e.g. c:\games\vintagestory
 - VINTAGE_STORY_DATA => the path to the games data directory typically located somewhere in appdata e.g. C:\Users\MyUser\AppData\Roaming\VintagestoryData
 
 ## Create a release
-To create a release just compile the solution in Release configuration. A folder named "release" should appear in the solution directory.
-This can then be zipped to be uploaded to the mod-db.
-
-I'm lazy, so the github pipeline produces a zip file on each commit, which can be used directly.
+1. Update version in `modinfo.json` according to [SemVer](https://semver.org/)
+2. (Optional) Update game version used for CI build in `ci.yaml`
+3. Add Changelog entry for new version in `CHANGELOG.md`
+4. Commit and push to main.
+5. Wait for CI pipeline to produce zip File and download it
+6. Create GitHub release for new version `vX.Y.Z` with changelog text and attach zip file
+7. Create new release on `https://mods.vintagestory.at/prospecttogether` with changelog text and attach zip file
