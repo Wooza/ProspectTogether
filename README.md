@@ -118,14 +118,17 @@ On the server side, the info is stored in `%Vintage_Story_Data%/ModData/YourWorl
 A map mode that displays the relative density of the ores on the map via a color gradient. Can be enabled/disabled and switched between displaying the density of just one ore and displaying the density of all ores (The highest density per chunk is picked).
 
 Normal map (map mode 0)
+
 ![map](https://user-images.githubusercontent.com/24532072/168427928-96b134aa-288d-4d4c-ade6-ddcb002c6d51.png)
 
 
 Heatmap (map mode 1)
+
 ![heatmap](https://user-images.githubusercontent.com/24532072/168427930-571788d3-eca5-4cbb-b6d6-caf2c6b9bcd1.png)
 
 
 Heatmap for Cassiterite only (map mode 1; heatmapore Cassiterite)
+
 ![heatmapCassiterite](https://user-images.githubusercontent.com/24532072/168427932-9fd7020f-3248-4708-8f68-25a082a86bd2.png)
 
 
