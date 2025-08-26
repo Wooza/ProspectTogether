@@ -1,4 +1,6 @@
 # Changelog
+* 2.1.0
+    * Update game version to 1.21.0
 * 2.1.0-rc.1
     * Update to .NET 8
     * Update game version to 1.21.0-rc.4

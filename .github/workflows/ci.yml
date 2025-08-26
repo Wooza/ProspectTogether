@@ -19,7 +19,7 @@ jobs:
       run: |
         # Hardcode game version used for build
         # $vs_version = $(Get-Content .\resources\modinfo.json | jq -r .dependencies.game)
-        $vs_version = '1.21.0-rc.4'
+        $vs_version = '1.21.0'
         $filename = "vs_server_linux-x64_${vs_version}.tar.gz"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } elseif ($vs_version -like "*-pre*") { "pre" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
