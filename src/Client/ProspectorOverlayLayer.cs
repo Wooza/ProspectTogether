@@ -110,7 +110,7 @@ namespace ProspectTogether.Client
         {
             foreach (ProspectInfo info in information)
             {
-                var newComponent = new ProspectorOverlayMapComponent(ClientApi, info.Chunk, info.GetMessage(), ColorTextures[(int)GetRelativeDensity(info)]);
+                var newComponent = new ProspectorOverlayMapComponent(ClientApi, info.Chunk, info.GetMessage(), ColorTextures[(int)GetRelativeDensity(info)], Storage, info.hidden);
                 _components[info.Chunk] = newComponent;
             }
         }
@@ -332,6 +332,23 @@ namespace ProspectTogether.Client
                 texture?.Dispose();
             }
             base.Dispose();
+        }
+
+        public override void OnMouseUpClient(MouseEvent args, GuiElementMap mapElem)
+        {
+            if (args.Button != Vintagestory.API.Common.EnumMouseButton.Middle)
+            {
+                // We only care about middle mouse click
+                return;
+            }
+
+            lock (Storage.Lock)
+            {
+                foreach (var component in _components.Values)
+                {
+                    component.OnMouseUpOnElement(args, mapElem);
+                }
+            }
         }
 
     }

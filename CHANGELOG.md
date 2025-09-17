@@ -1,4 +1,6 @@
 # Changelog
+* 2.1.1
+    * Players can toggle visibility of individual prospecting chunks
 * 2.1.0
     * Update game version to 1.21.0
 * 2.1.0-rc.1

@@ -179,6 +179,15 @@ namespace ProspectTogether.Client
                 HasChangedSinceLastSave = false;
             }
         }
+
+        public void ToggleHide(ChunkCoordinate chunkCoordinates)
+        {
+            lock (Lock)
+            {
+                HasChangedSinceLastSave = true;
+                Data[chunkCoordinates].hidden = !Data[chunkCoordinates].hidden;
+            }
+        }
     }
 
     public class ClientStoredData

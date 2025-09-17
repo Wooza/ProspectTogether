@@ -30,6 +30,12 @@ namespace ProspectTogether.Shared
         public List<OreOccurence> Values = new();
 
         /// <summary>
+        /// Is this chunk hidden?
+        /// </summary>
+        [ProtoMember(3)]
+        public bool hidden = false;
+
+        /// <summary>
         /// The return value from <see cref="GetMessage"/> if it was called at least once. Used to avoid multiple StringBuilder calls.
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]

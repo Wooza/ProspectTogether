@@ -16,35 +16,37 @@ namespace ProspectTogether.Client
 
         private readonly LoadedTexture colorTexture;
         private readonly Vec3d worldPos = new();
+        private readonly ClientStorage storage;
+        private bool hidden = false;
         private Vec2f viewPos = new();
 
-        public ProspectorOverlayMapComponent(ICoreClientAPI clientApi, ChunkCoordinate coords, string message, LoadedTexture colorTexture) : base(clientApi)
+        public ProspectorOverlayMapComponent(ICoreClientAPI clientApi, ChunkCoordinate coords, string message, LoadedTexture colorTexture, ClientStorage storage, bool hidden) : base(clientApi)
         {
             _chunkCoordinates = coords;
             _message = message;
             _chunksize = GlobalConstants.ChunkSize;
             worldPos = new Vec3d(coords.X * _chunksize, 0, coords.Z * _chunksize);
+            this.storage = storage;
+            this.hidden = hidden;
             this.colorTexture = colorTexture;
         }
 
         public override void OnMouseMove(MouseEvent args, GuiElementMap mapElem, StringBuilder hoverText)
         {
-            var worldPos = new Vec3d();
-            float mouseX = (float)(args.X - mapElem.Bounds.renderX);
-            float mouseY = (float)(args.Y - mapElem.Bounds.renderY);
-
-            mapElem.TranslateViewPosToWorldPos(new Vec2f(mouseX, mouseY), ref worldPos);
-
-            var chunkX = (int)(worldPos.X / _chunksize);
-            var chunkZ = (int)(worldPos.Z / _chunksize);
-            if (chunkX == _chunkCoordinates.X && chunkZ == _chunkCoordinates.Z)
+            if (IsMouseInsideChunk(args, mapElem))
             {
                 hoverText.AppendLine($"\n{_message}");
+                hoverText.AppendLine("\n[ProspectTogether] Middle-mouse to hide/show");
             }
         }
 
         public override void Render(GuiElementMap map, float dt)
         {
+            if (hidden)
+            {
+                return;
+            }
+
             map.TranslateWorldPosToViewPos(worldPos, ref viewPos);
             if (viewPos.X < -2 * _chunksize
                 || viewPos.Y < -2 * _chunksize
@@ -62,6 +64,35 @@ namespace ProspectTogether.Client
                 (int)(colorTexture.Width * map.ZoomLevel),
                 (int)(colorTexture.Height * map.ZoomLevel),
                 50);
+        }
+
+        public override void OnMouseUpOnElement(MouseEvent args, GuiElementMap mapElem)
+        {
+            if (args.Handled)
+            {
+                return;
+            }
+            if (IsMouseInsideChunk(args, mapElem))
+            {
+                // Store hidden state
+                storage.ToggleHide(_chunkCoordinates);
+                // Hide this component
+                hidden = !hidden;
+                args.Handled = true;
+            }
+        }
+
+        private bool IsMouseInsideChunk(MouseEvent args, GuiElementMap mapElem)
+        { 
+            var worldPos = new Vec3d();
+            float mouseX = (float)(args.X - mapElem.Bounds.renderX);
+            float mouseY = (float)(args.Y - mapElem.Bounds.renderY);
+
+            mapElem.TranslateViewPosToWorldPos(new Vec2f(mouseX, mouseY), ref worldPos);
+
+            var chunkX = (int)(worldPos.X / _chunksize);
+            var chunkZ = (int)(worldPos.Z / _chunksize);
+            return chunkX == _chunkCoordinates.X && chunkZ == _chunkCoordinates.Z;
         }
     }
 }
