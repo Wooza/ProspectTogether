@@ -1,0 +1,13 @@
+{
+    "// ProspectTogether v2.1.1 || Enlace de VS ModDB: https://mods.vintagestory.at/prospecttogether ": "",
+    "// Traducido por C4BR3R4 || Última Modificación: 03/DIC/2024 || Registro de Cambios: http://c4br3r4.es/index.php?topic=1277.0 ": "",
+
+	"dialog-map-mode-default": "Predeterminado",
+	"dialog-map-mode-heatmap": "Mapa Térmico",
+	"dialog-auto-share": "Público",
+	"dialog-send-all-now": "Publicar Todo",
+	"dialog-all-players": "Todos los Jugadores",
+
+    "// Cadenas añadidas desde el archivo '/assets/game/lang/en.json' ": "",
+    "game:maplayer-prospect-together": "Prospección"
+}
