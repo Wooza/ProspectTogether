@@ -1,4 +1,6 @@
 # Changelog
+* 2.1.2
+    * Add spanish translation
 * 2.1.1
     * Players can toggle visibility of individual prospecting chunks
 * 2.1.0
