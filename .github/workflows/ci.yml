@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -19,7 +19,7 @@ jobs:
       run: |
         # Hardcode game version used for build
         # $vs_version = $(Get-Content .\resources\modinfo.json | jq -r .dependencies.game)
-        $vs_version = '1.21.5'
+        $vs_version = '1.22.0-rc.4'
         $filename = "vs_server_linux-x64_${vs_version}.tar.gz"
         $folder = if ($vs_version -like "*-rc*") { "unstable" } elseif ($vs_version -like "*-pre*") { "pre" } else { "stable" }
         $uri = "https://cdn.vintagestory.at/gamefiles/${folder}/${filename}"
@@ -31,7 +31,7 @@ jobs:
       shell: pwsh
 
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
     - name: Restore Mod Dependencies
       run: msbuild /t:Restore /p:Configuration=Release
@@ -49,7 +49,7 @@ jobs:
       shell: pwsh
 
     - name: Upload Mod Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ env.ARTIFACT_NAME }}
         path: ./bin/Release/Mods/prospecttogether
