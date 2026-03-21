@@ -1,4 +1,7 @@
 # Changelog
+* 2.2.0
+    * Build mod with .net 10
+    * Build mod against 1.22.0-rc.4
 * 2.1.2
     * Add spanish translation
 * 2.1.1
