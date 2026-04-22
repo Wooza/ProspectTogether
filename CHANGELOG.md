@@ -1,4 +1,6 @@
 # Changelog
+* 2.2.1
+    * Build mod against 1.22.0
 * 2.2.0
     * Build mod with .net 10
     * Build mod against 1.22.0-rc.4
