@@ -119,6 +119,7 @@ namespace ProspectTogether.Client
         {
             if (!Config.AutoShare)
             {
+                Api.Logger.Debug("PT: Ignoring sent data because auto sharing is disabled.");
                 return;
             }
 
