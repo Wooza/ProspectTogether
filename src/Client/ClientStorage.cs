@@ -59,11 +59,13 @@ namespace ProspectTogether.Client
         {
             if (!IsModRunningOnServer())
             {
+                Api.Logger.Debug("PT: Server does not seem to running?");
                 return;
             }
 
             if (Config.AutoShare)
             {
+                Api.Logger.Debug("PT: Requesting data for groups");
                 ClientChannel.SendPacket(new PlayerRequestsInfoForGroupPacket(Constants.ALL_GROUP_ID));
                 ClientChannel.SendPacket(new PlayerRequestsInfoForGroupPacket(Config.ShareGroupUid));
             }
@@ -123,6 +125,7 @@ namespace ProspectTogether.Client
                 return;
             }
 
+            Api.Logger.Debug("PT: Received prospecting data.");
             lock (Lock)
             {
                 foreach (ProspectInfo info in packet.Data)
@@ -135,6 +138,7 @@ namespace ProspectTogether.Client
                 }
                 HasChangedSinceLastSave = true;
                 OnChanged?.Invoke(packet.Data);
+                Api.Logger.Debug("PT: Local data count now at " + Data.Count);
             }
         }
 
@@ -177,6 +181,7 @@ namespace ProspectTogether.Client
                         FoundOreNames.Add(occurence.Name);
                     }
                 }
+                Api.Logger.Debug("PT: Loaded intial local data: " + Data.Count);
                 HasChangedSinceLastSave = false;
             }
         }
