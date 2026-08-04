@@ -40,6 +40,7 @@ namespace ProspectTogether.Server
         {
             if (!IsValidGroup(packet.GroupId, fromPlayer))
             {
+                Api.Logger.Debug("PT: Not sending data because " + fromPlayer.PlayerName + " is not member of " + packet.GroupId);
                 // Invalid
                 return;
             }
@@ -59,6 +60,7 @@ namespace ProspectTogether.Server
             }
             ServerBroadcastsProspectingPacket broadCastPacket = new(packet.Data);
 
+            Api.Logger.Debug("PT: Broadcasting data to " + packet.GroupId);
             if (packet.GroupId == Constants.ALL_GROUP_ID)
             {
                 ServerChannel.BroadcastPacket(broadCastPacket);
@@ -68,6 +70,7 @@ namespace ProspectTogether.Server
                 PlayerGroup group = Api.Groups.PlayerGroupsById.Get(packet.GroupId, null);
                 if (group != null)
                 {
+                    Api.Logger.Debug("PT: Sending Packet to " + group.OnlinePlayers.ToArray());
                     ServerChannel.SendPacket(broadCastPacket, Array.ConvertAll(group.OnlinePlayers.ToArray(), i => (IServerPlayer)i));
                 }
             }
